@@ -1,0 +1,59 @@
+.error-dialog {
+    position: fixed;
+    top: 320px; /* Distance from the top */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    background-color: #FFF6E8;
+    color: #241E17; /* Text color */
+    border: 0.5px solid #018FCC;
+    padding: 15px 12px;
+    border-radius: 16px;
+    z-index: 1000; /* Ensure it is on top of other elements */
+    transition: opacity 0.5s ease;
+}
+@media (min-width: 640px) {
+    .error-dialog {
+        position: fixed;
+        top: 320px; /* Distance from the top */
+        left: 50%;
+        transform: translateX(-50%); /* Center horizontally */
+        background-color: #FFF6E8;
+        color: #241E17; /* Text color */
+        border: 0.5px solid #018FCC;
+        padding: 15px 60px;
+        border-radius: 16px;
+        z-index: 1000; /* Ensure it is on top of other elements */
+        transition: opacity 0.5s ease;
+    }
+}
+.success-dialog {
+    position: fixed;
+    top: 320px; /* Distance from the top */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    background-color: #FFF6E8;
+    color: #241E17; /* Text color */
+    border: 0.5px solid #018FCC;
+    padding: 15px 12px;
+    border-radius: 16px;
+    z-index: 1000; /* Ensure it is on top of other elements */
+    transition: opacity 0.5s ease;
+}
+@media (min-width: 640px) {
+    .success-dialog {
+        position: fixed;
+        top: 320px; /* Distance from the top */
+        left: 50%;
+        transform: translateX(-50%); /* Center horizontally */
+        background-color: #FFF6E8;
+        color: #241E17; /* Text color */
+        border: 0.5px solid #018FCC;
+        padding: 15px 60px;
+        border-radius: 16px;
+        z-index: 1000; /* Ensure it is on top of other elements */
+        transition: opacity 0.5s ease;
+    }
+}
+.hidden {
+    display: none; /* Hide by default */
+}

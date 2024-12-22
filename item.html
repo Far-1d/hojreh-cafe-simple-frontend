@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>کافه حجره | صفحه محصول</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+    <link type="text/css" rel="stylesheet" href="styles/item-page.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
+    <script src="js/script.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/item-page.js"></script>
+  </head>
+  <body class="relative min-h-screen w-full">
+    <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: 'Vazirmatn', sans-serif;">
+      <div class="main relative min-h-screen max-w-[520px] bg-[#fff9f0] p-6 px-10 mb-32">
+        <!-- navbar -->
+        <nav class="flex h-[56px] w-full items-center justify-between overflow-visible rounded-[16px] bg-[#FFF6E8] px-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+          <button class="flex w-10 items-center justify-center">
+            <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager"/>
+          </button>
+  
+          <button class="flex w-14 items-center justify-center overflow-visible" onclick=goToHome()>
+            <img src="/images/logo.png" alt="logo" class="w-[52px]" loading="eager"/>
+          </button>
+
+          <button class="flex w-10 items-center justify-center">
+            <div class="h-8 w-8">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.33337 10.6665H22.6667M9.33337 15.9998H22.6667M9.33337 21.3332H22.6667" stroke="#28303F" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </button>
+        </nav>
+        
+        <!-- item image -->
+        <div class="flex flex-col items-center justify-center">
+          <img class="item-image mt-16 h-full w-full rounded-[16px] flex" id="carousel" src="" alt="">
+          <div class="dots flex items-center justify-center h-full w-full gap-2 mt-4"></div>
+        </div>
+
+        <!-- item description -->
+        <div class="item-center mt-4 flex flex-col justify-center px-4" dir="rtl">
+          <div class="flex items-center justify-between w-full">
+            <h1 class="item-name text-xl" style="font-weight: 700"></h1>
+            <span class="text-sm single_word"></span>
+          </div>
+          <p class="item-description mt-4 text-sm leading-6"></p>
+        </div>
+      </div>
+      
+      <!-- action buttons -->
+      <div class="fixed bottom-5 left-1/2 transform -translate-x-1/2 grid w-full max-w-[520px] grid-cols-3 space-x-6 px-10">
+        <div dir="rtl" class="option-list col-span-3 mt-1 flex h-full w-full flex-col items-start justify-center bg-transparent ml-3 p-1">
+
+        </div>
+        <button onclick=goToMenu() class="col-span-1 bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] text-[#241E17] text-lg">
+          بازگشت
+        </button>
+        <button class="item-select col-span-2 bg-[#018FCC] text-white rounded-[16px] h-14 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] text-lg">
+          انتخاب
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
+

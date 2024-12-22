@@ -1,0 +1,14 @@
+.dot {
+  height: 16px;
+  width: 16px;
+  background-color: #dabda3;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.dot:hover {
+  background-color: #826C58;
+}
+.dot.active {
+  background-color: #665541;
+}

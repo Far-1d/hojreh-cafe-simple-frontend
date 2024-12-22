@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>کافه حجره | منو</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/menu.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/skeleton.css"/>
+    <script src="js/script.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/cart.js"></script>
+  </head>
+  <body class="relative min-h-screen w-full bg-[#fff9f0]" style="font-family: 'Vazirmatn', sans-serif;">
+    <div class="w-full h-full bg-[#fff9f0] flex items-center justify-center">
+    <div class="w-full h-full bg-[#fff9f0] max-w-[520px] p-6 px-10 ">
+      <!-- navbar -->
+      <nav class="flex h-[56px] w-full items-center justify-between overflow-visible rounded-[16px] bg-[#FFF6E8] px-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+        <button class="flex w-10 items-center justify-center">
+          <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
+        </button>
+
+        <button class="flex w-14 items-center justify-center overflow-visible" onclick=goToHome()>
+          <img src="/images/logo.png" alt="logo" class="w-[52px]" loading="eager" decoding="async"/>
+        </button>
+
+        <button class="flex w-10 items-center justify-center">
+          <div class="h-8 w-8">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.33337 10.6665H22.6667M9.33337 15.9998H22.6667M9.33337 21.3332H22.6667" stroke="#28303F" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </button>
+      </nav>
+
+      <!-- category list -->
+      <div class="mt-6 h-12 w-full p-[1px]" dir="rtl">
+        <div class="category_list flex h-12 w-full mx-3 items-start overflow-y-hidden overflow-x-auto">
+          <!-- filled with category buttons -->
+
+          <div class="sk-loading">
+            <h4 class="sk-category"></h4>
+          </div>
+          
+          <div class="sk-loading">
+            <h4 class="sk-category"></h4>
+          </div>
+
+          <div class="sk-loading">
+            <h4 class="sk-category"></h4>
+          </div>
+
+          <div class="sk-loading">
+            <h4 class="sk-category"></h4>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- this should be fit to screen -->
+      <div class="overflow-y-hidden flex flex-col h-full">
+        <div class="item_list flex flex-col items-center justify-start w-full h-[calc(100vh-344px)] px-3 pb-1 overflow-y-auto">
+          <!-- filled with item div content -->
+
+          <div class="skeleton card sk-loading">
+  
+            <div class="sk-content">
+              <h5></h5>
+              <div class="sk-description">
+                
+              </div>
+            </div>
+            
+            <div class="sk-image">
+              
+            </div>
+          </div>
+
+          <div class="skeleton card sk-loading">
+  
+            <div class="sk-content">
+              <h5></h5>
+              <div class="sk-description">
+                
+              </div>
+            </div>
+            
+            <div class="sk-image">
+              
+            </div>
+          </div>
+
+          <div class="skeleton card sk-loading">
+  
+            <div class="sk-content">
+              <h5></h5>
+              <div class="sk-description">
+                
+              </div>
+            </div>
+            
+            <div class="sk-image">
+              
+            </div>
+          </div>
+
+          <div class="skeleton card sk-loading">
+  
+            <div class="sk-content">
+              <h5></h5>
+              <div class="sk-description">
+                
+              </div>
+            </div>
+            
+            <div class="sk-image">
+              
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- complete order btn -->
+      <div class="cart-button cursor-pointer sticky bottom-10 left-[30px] flex h-14 w-40 items-center justify-center gap-2 rounded-[16px] bg-[#018FCC] text-white" dir="rtl">
+        <span class="text-xl hover:font-bold">سبد خرید</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.58683 10H21.4132M18.0351 6L5.96486 6C3.45403 6 1.57594 8.32624 2.08312 10.808L3.71804 18.808C4.09787 20.6666 5.71942 22 7.59978 22H16.4002C18.2806 22 19.9021 20.6666 20.282 18.808L21.9169 10.808C22.4241 8.32624 20.546 6 18.0351 6Z" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 2L6 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15 2L18 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 14L9 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15 14L15 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>کافه حجره | تکمیل سفارش</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" />
+
+    <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/dialog.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/send_info.css"/>
+    <script src="https://unpkg.com/popper.js@1" defer></script>
+    <script src="https://unpkg.com/tippy.js@5" defer></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/dialog.js" defer></script>
+    <script src="js/order.js" defer></script>
+    <script src="js/cart.js" defer></script>
+    <script src="js/send_info.js" defer></script>
+  </head>
+  <body class="relative min-h-screen w-full">
+    <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: 'Vazirmatn', sans-serif;">
+      <div class="min-h-screen w-full max-w-[520px] bg-[#fff9f0] p-6 px-10">
+        <!-- navbar -->
+        <nav class="flex h-[56px] w-full items-center justify-between overflow-visible rounded-[16px] bg-[#FFF6E8] px-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+          <button class="flex w-10 items-center justify-center">
+            <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
+          </button>
+  
+          <button class="flex w-14 items-center justify-center overflow-visible" onclick=goToHome()>
+            <img src="/images/logo.png" alt="logo" class="w-[52px]" loading="eager" decoding="async"/>
+          </button>
+
+          <button class="flex w-10 items-center justify-center">
+            <div class="h-8 w-8">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.33337 10.6665H22.6667M9.33337 15.9998H22.6667M9.33337 21.3332H22.6667" stroke="#28303F" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </button>
+        </nav>
+
+        <!-- address form -->
+        <div class="mb-32 mt-14 flex w-full flex-col items-center justify-center" dir="rtl">
+          <h1 class="w-full py-2 pb-4 text-xl text-[#665541]" style="font-weight:700" dir="rtl">اطلاعات ارسال</h1>
+          
+          <!-- addresses -->
+          <div class="address-list flex-col item-center justify-center w-full h-full space-y-5">
+
+          </div>
+
+          <!-- timing -->
+          <div class="flex flex-col items-center justify-center h-full w-full mt-8">
+            <h4 class="w-full text-[#665541] text-base" style="font-weight:700">
+              زمان ارسال را انتخاب کنید
+            </h4>
+          <div class="deliver-time flex h-full w-full items-center justify-between gap-4" dir="ltr">
+
+          </div>
+
+          <!-- discount -->
+          <div class="my-3 h-full w-full">
+            <label for="discount" class="text-[#665541]" style="font-weight:700">کد تخفیف</label>
+            <div class="flex justify-between mt-2 h-14 min-w-full rounded-[16px] border border-[#241E17] bg-[#FFFDFA] px-3">
+              <input type="text" name="discount" placeholder="کد تخفیف خود را وارد کنید" id="discount" class="w-full focus:outline-none focus:ring-0" />
+              <button class="apply-button w-24 text-sm">اعمال</button>
+            </div>
+          </div>
+
+          <div class="total-price mt-6 flex w-full items-center justify-around text-sm text-[#665541]" style="font-weight:700">
+            <span>مجموع هزینه ها</span>
+            <span class="price-toman"></span>
+          </div>
+          <div class="total-price mt-6 flex w-full items-center justify-around text-sm text-[#665541]" style="font-weight:700">
+            <span class="w-10"></span>
+            <span class="price-net"></span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+      
+      <!-- action buttons -->
+        <div class="fixed bottom-5 left-1/2 transform -translate-x-1/2 grid w-full max-w-[520px] grid-cols-3 space-x-6 px-10" dir="ltr">
+          <button class="return-button col-span-1 rounded-[16px] bg-[#FFF6E8] text-lg text-[#241E17] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+          بازگشت
+          </button>
+          <button class="forward-button col-span-2 h-14 rounded-[16px] bg-[#018FCC] text-lg text-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">پرداخت</button>
+        </div>
+    <style>
+      input:focus {
+        font-weight: 700; /* Change to bold when focused */
+      }
+    </style>
+  </body>
+</html>

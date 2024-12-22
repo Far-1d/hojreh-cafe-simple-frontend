@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>کافه حجره</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/skeleton.css"/>
+    <script src="js/main.js"></script> 
+    <script src="js/script.js"></script> 
+  </head>
+  <body class="relative min-h-screen w-full ">
+  <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: 'Vazirmatn', sans-serif;">
+    <div class="min-h-screen w-full max-w-[520px] bg-[#fff9f0] p-6 px-10">
+      <!-- navbar -->
+      <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+        <button class="flex w-10 items-center justify-center">
+          <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
+        </button>
+
+        <button class="flex w-14 items-center justify-center overflow-visible" onclick=goToHome()>
+          <img src="/images/logo.png" alt="logo" class="w-[52px] logo" loading="eager" decoding="async"/>
+        </button>
+
+        <button class="flex w-10 items-center justify-center">
+          <div class="h-8 w-8">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.33337 10.6665H22.6667M9.33337 15.9998H22.6667M9.33337 21.3332H22.6667" stroke="#28303F" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </button>
+      </nav>
+
+      <!-- most sold -->
+      <div class="mt-24 flex w-full flex-col items-center justify-between" dir="rtl">
+        <h4 class="best_seller h-8 w-full text-sm font-bold"></h4>
+        <div class="best_seller_items mt-[6px] flex h-36 w-full items-center rounded-[16px] bg-[#FFF6E8] px-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+          
+          <div class="flex items-center justify-around w-full">
+            <div class="flex flex-col items-center justify-center w-full sk-loading">
+              <div class="sk-img"></div>
+              <p class="sk-caption"></p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center w-full sk-loading">
+              <div class="sk-img"></div>
+              <p class="sk-caption"></p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center w-full sk-loading">
+              <div class="sk-img"></div>
+              <p class="sk-caption"></p>
+            </div>
+          </div>
+
+        </div>
+
+      <!-- menu button -->
+      <button onclick=goToMenu() class="w-full rounded-[16px] h-14 py-2 px-5 bg-[#018FCC] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] mt-8">
+        <span class="restaurant_menu text-white font-normal text-xl">
+        </span>
+      </button>
+
+      <!-- contact -->
+      <div class="flex flex-col h-full w-full items-start rounded-[16px] bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] mt-8 p-2 px-5">
+        <h3 class="font-bold text-sm">
+          اطلاعات تماس
+        </h3>
+        <p class="address my-2 font-normal text-base w-full line-clamp-1 text-neutral-900">
+
+        </p>
+        <pre class="phone_number font-normal text-base w-full leading-6 text-neutral-900 line-clamp-3 text-left">
+        
+        </pre>
+      </div>
+
+      <!-- working hour -->
+      <div class="working_hours flex flex-col h-full w-full items-start rounded-[16px] bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] mt-6 p-2 px-5">
+        <h3 class="font-bold text-sm">
+          ساعات کاری
+        </h3>
+      </div>
+
+      <!-- about us -->
+      <button class="flex h-full w-full items-start justify-between rounded-[16px] bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] mt-6 p-4 px-5">
+        <h3 class="about_us_text text-[#665541] font-bold text-base">
+          <!-- restaurant name -->
+        </h3>
+        <img src="https://s8.uupload.ir/files/002-outdoor_vu15.png" alt="about-us icon" class="w-8 h-8">
+      </button>
+
+      <!-- social media -->
+      <button class="instagram_button flex h-full w-full items-start justify-between rounded-[16px] bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] mt-6 p-4 px-5">
+        <h3 class="instagram_text text-[#665541] font-light text-base">
+          <!-- restuarant name -->
+        </h3>
+        <img src="/images/instagram.png" alt="instagram icon" class="w-6 h-6">
+      </button>
+
+      <div class="flex flex-col h-full w-full items-start rounded-[16px] bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] mt-6 p-2 px-5">
+        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=559069&Code=1ZeLBELTd6e0MRy4xqpxeUfq7sf6So6k'>
+          <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=559069&Code=1ZeLBELTd6e0MRy4xqpxeUfq7sf6So6k' alt='اینماد' style='cursor:pointer' code='1ZeLBELTd6e0MRy4xqpxeUfq7sf6So6k'
+           class="h-14 w-14">
+        </a>
+      </div>
+
+    </div>
+  </div>
+  </body>
+</html>

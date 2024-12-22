@@ -1,0 +1,104 @@
+:root {
+    --loading-grey: #ededed;
+}
+.card {
+    width: 100%;
+    background-color: #fff9f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, .12);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.5rem 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.sk-image {
+    height: 80px;
+    width: 110px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+
+.sk-content {
+    width:100%;
+}
+
+h5 {
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+}
+
+.sk-description {
+    font-size: 1rem;
+    line-height: 1.4rem;
+}
+
+.sk-loading .sk-image,
+.sk-loading h5,
+.sk-loading .sk-description,
+.sk-category,
+.sk-caption,
+.sk-img{
+    background-color: var(--loading-grey);
+    background: linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(255, 255, 255, .5) 50%,
+        rgba(255, 255, 255, 0) 60%
+    ) var(--loading-grey);
+    background-size: 200% 100%;
+    background-position-x: 180%;
+    animation: 1s loading ease-in-out infinite;
+}
+
+@keyframes loading {
+    to {
+        background-position-x: -20%;
+    }
+}
+
+.sk-loading h5 {
+    min-height: 1.6rem;
+    border-radius: 4px;
+    animation-delay: .05s;
+}
+
+.sk-loading .sk-description {
+    min-height: 4rem;
+    border-radius: 4px;
+    animation-delay: .06s;
+}
+
+  
+/* category */
+.sk-category {
+    margin: 0;
+    min-height: 2rem;
+    line-height: 1rem;
+    width: 75px;
+    border-radius: 8px;
+    animation-delay: .05s;
+    margin-right: 6px;
+}
+
+
+/* image and caption */
+.sk-img {
+    height:80px;
+    width:80px;
+    margin-bottom: 4px;
+    border-radius: 16px;
+  }
+  
+  .sk-caption {
+    min-height: 1.8rem;
+    border-radius: 4px;
+    animation-delay: .05s;
+    margin-right:6px;
+    width: 78px;
+  }

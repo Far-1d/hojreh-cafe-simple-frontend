@@ -1,0 +1,4 @@
+.selected {
+    background-color: #018FCC; /* Highlight color for selected button */
+    color: white;               /* Text color for selected button */
+}
