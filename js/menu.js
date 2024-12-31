@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 items = items.concat(catItems);
             });
 
-            setWithExpiry("items", items, 60*60);
+            setWithExpiry("items", items, 10*60);
         }
         fillCategory();
         fillItems(cart);
@@ -114,11 +114,11 @@ function fillItems(cart){
 // create a categoty element for item list
 function createCategoryHeader(name, idx){
     const div = document.createElement('div');
-    div.className = "mt-6 flex w-full items-center justify-end item-section";
+    div.className = "mt-10 mb-6 flex w-full items-center justify-end item-section";
     div.id = `section-${idx}`
 
     const span = document.createElement('span');
-    span.className = "text-lg font-bold text-[#665541]";
+    span.className = "text-xl font-bold text-[#665541]";
     span.textContent = name;
 
     div.appendChild(span)
@@ -134,7 +134,7 @@ function changeImageUrl(img){
 
 function createItemElement(item, image, cart){
     const mainDiv = document.createElement('div');
-    mainDiv.className = "mt-4 flex h-fit w-full flex-col items-start justify-between rounded-[16px] bg-[#FFF6E8] p-5 px-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]";
+    mainDiv.className = "mt-4 flex h-fit w-full flex-col items-start justify-between rounded-[16px] bg-[#FFF6E8] p-3 px-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]";
     mainDiv.dir = "rtl";
     
     // row 1
@@ -143,10 +143,10 @@ function createItemElement(item, image, cart){
     img_div.dir = "rtl";
 
     const img_inner_div = document.createElement('div');
-    img_inner_div.className = "col-span-2 w-full";
+    img_inner_div.className = "col-span-3 w-full";
 
     const img_tag = document.createElement('img');
-    img_tag.className = "max-h-28 rounded-[16px]"
+    img_tag.className = "max-h-40 rounded-[16px]"
     img_tag.alt = item.name;
     img_tag.src = image;
     img_tag.loading = "lazy";
@@ -155,18 +155,23 @@ function createItemElement(item, image, cart){
     img_inner_div.appendChild(img_tag)
     img_div.appendChild(img_inner_div)
     
-    const name_description_div = document.createElement('div');
-    name_description_div.className = "col-span-5 w-full px-3";   
+    let spaceBelow = 0;
+    if (! single_words[item.single_word]) spaceBelow += 5;
+    if (! item.description) spaceBelow += 5;
 
+    const name_description_div = document.createElement('div');
+    name_description_div.className = `col-span-4 h-full w-full flex items-center px-3 pb-${spaceBelow}`;   
+
+    const button_holder_div = document.createElement('div');
+    button_holder_div.className = `flex flex-col justify-center items-start h-full`
     const redirect_button = document.createElement('button');
     redirect_button.addEventListener('click', ()=>{
-        setWithExpiry('itemDisplayed', item.id, 60);
+        setWithExpiry('itemDisplayed', item.id, 5*60);
         window.location.href = "item.html";
-
     })
 
     const h3_name = document.createElement('h3');
-    h3_name.className = "text-xl font-bold text-[#665541]";
+    h3_name.className = "text-xl font-bold text-[#665541] py-2";
     h3_name.textContent = item.name;
 
     // single word
@@ -180,10 +185,11 @@ function createItemElement(item, image, cart){
     desc_span.textContent = item.description;
 
     redirect_button.appendChild(h3_name);
-    name_description_div.appendChild(redirect_button);
-    name_description_div.appendChild(sw_span);
-    name_description_div.appendChild(desc_span);
-
+    button_holder_div.appendChild(redirect_button);
+    button_holder_div.appendChild(sw_span);
+    button_holder_div.appendChild(desc_span);
+    
+    name_description_div.appendChild(button_holder_div);
     img_div.appendChild(name_description_div);
 
     // row 2
@@ -191,7 +197,7 @@ function createItemElement(item, image, cart){
     row2_div1.className = "mt-3 flex w-full items-center justify-between";
 
     const price_span = document.createElement('span');
-    price_span.className = "text-base font-bold text-[#665541]";
+    price_span.className = "text-xl font-bold text-[#665541]";
     price_span.textContent = convertToPersianPrice(item.price);
 
     const row2_div2 = document.createElement('div');

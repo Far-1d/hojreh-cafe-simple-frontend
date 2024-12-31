@@ -33,7 +33,7 @@ async function fetchAndStoreData(method, url, key, headers, json_data) {
             return await response.json();
         }
     } catch (error) {
-        console.error('Error fetching or storing data:', error);
+        console.log('Error fetching or storing data:', error);
     }
 }
 
@@ -112,27 +112,22 @@ function getWithExpiry(key) {
 }
 
 
-document.addEventListener('DOMContentLoaded', ()=>{
-    const menuBtn = document.getElementsByClassName('menu-btn')[0];
-    const closeMenuBtn = document.getElementById('closeMenu');
+
+function toggleMenu() {
+    console.log('togling menu!')
     
-    menuBtn.addEventListener('click', 
-        function() {
-            console.log('togling menu!')
-            const menu = document.getElementById('sideMenu');
-            menu.classList.toggle('openMenu'); // Toggle the 'open' class
+    const menu = document.getElementById('sideMenu');
+    menu.classList.toggle('openMenu'); // Toggle the 'open' class
+    
+    const closeMenuBtn = document.getElementById('closeMenu');
+    closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
+}
 
-            closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
-        }
-    );
-
-    closeMenuBtn.addEventListener('click', 
-        function() {
-            console.log('togling menu!')
-            const menu = document.getElementById('sideMenu');
-            menu.classList.toggle('openMenu'); // Toggle the 'open' class
-            
-            closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
-        }
-    );
-});
+function toggleClose() {
+    console.log('togling menu!')
+    const menu = document.getElementById('sideMenu');
+    menu.classList.toggle('openMenu'); // Toggle the 'open' class
+    
+    const closeMenuBtn = document.getElementById('closeMenu');
+    closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
+}

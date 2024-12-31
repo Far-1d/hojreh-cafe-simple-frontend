@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // return to main page if no branch id is fonud 
-    const item_id = setWithExpiry('itemDisplayed');
+    const item_id = getWithExpiry('itemDisplayed');
     if ( item_id == null){
         window.location.href = "menu.html"
         return;
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function fillPage(cart){
-    const item = setWithExpiry('single_item');
+    const item = getWithExpiry('single_item');
     
     createCarousel(item);
 
@@ -49,7 +49,7 @@ function fillPage(cart){
 function createItemOptionElement(option, item, cart, is_last){
   {/* option 1  */}
   const mainDiv = document.createElement('div')
-  mainDiv.className = `flex w-full items-center ${is_last ?'':'border-b-[0.2px] border-[#018fcc2c]'} p-3 pb-10`
+  mainDiv.className = `flex w-full items-center ${is_last ?'':'border-b-[0.2px] border-[#018fcc2c]'} p-3 pb-4`
   
   const nameDiv = document.createElement('div');
   nameDiv.innerHTML = `<div class="flex w-full flex-col items-start space-y-2 text-base font-bold text-[#241E17]">
