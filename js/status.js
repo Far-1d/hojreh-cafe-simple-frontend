@@ -9,8 +9,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (urlParams.has('status')){
         if (urlParams.get('status')=="OK" && !urlParams.has('code')){
-            showSuccess('پرداخت با موفقیت انجام شد');
-            fillOrderStatus();
+            if (urlParams.has('state')){
+                showSuccess('سفارش با موفقیت ثبت شد');
+                fillOrderStatus(false);
+            } else {
+                showSuccess('پرداخت با موفقیت انجام شد');
+                fillOrderStatus();
+            }
             cart.clearCart();
             order.deleteOrder()
         }
@@ -25,7 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-function fillOrderStatus(){
+function fillOrderStatus(isTakeout=true){
     console.log('order successfull');
     const mainDiv = document.getElementsByClassName('status-div')[0];
     mainDiv.innerHTML = `
@@ -34,18 +39,19 @@ function fillOrderStatus(){
                 در حال اماده سازی
             </span>
         </div>
+        ${isTakeout ? `
+            <div class="sending flex items-center justify-center h-12 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] border-[#018FCC] text-sm text-[#241E17]" >
+                <span>
+                    در حال ارسال
+                </span>
+            </div>
 
-        <div class="sending flex items-center justify-center h-12 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] border-[#018FCC] text-sm text-[#241E17]" >
-            <span>
-                در حال ارسال
-            </span>
-        </div>
-
-        <div class="received flex items-center justify-center h-12 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] border-[#018FCC] text-sm text-[#241E17]">
-            <span>
-                دریافت شد
-            </span>
-        </div>
+            <div class="received flex items-center justify-center h-12 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] border-[#018FCC] text-sm text-[#241E17]">
+                <span>
+                    دریافت شد
+                </span>
+            </div>
+        ` : ''}
     `;
 }
 

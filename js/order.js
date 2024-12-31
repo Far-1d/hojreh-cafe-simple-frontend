@@ -102,8 +102,8 @@ class Order {
 
         const body = new FormData();
         body.append('restaurant', restaurant.id);
-        body.append('address', this.address);
-        body.append('deliver_time', this.deliveryTime);
+        if (this.address) body.append('address', this.address);
+        if (this.deliveryTime) body.append('deliver_time', this.deliveryTime);
         body.append('delivery', this.deliveryType);
         body.append('discount', this.discount);
         body.append('note', this.customerNote);

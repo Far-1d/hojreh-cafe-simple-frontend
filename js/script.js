@@ -110,3 +110,29 @@ function getWithExpiry(key) {
     
     return item.value; // Return the value if not expired
 }
+
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    const menuBtn = document.getElementsByClassName('menu-btn')[0];
+    const closeMenuBtn = document.getElementById('closeMenu');
+    
+    menuBtn.addEventListener('click', 
+        function() {
+            console.log('togling menu!')
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('openMenu'); // Toggle the 'open' class
+
+            closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
+        }
+    );
+
+    closeMenuBtn.addEventListener('click', 
+        function() {
+            console.log('togling menu!')
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('openMenu'); // Toggle the 'open' class
+            
+            closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
+        }
+    );
+});

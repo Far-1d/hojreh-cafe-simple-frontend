@@ -1,6 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const restaurant_name = "حجره"
+    const restaurant_name = "حجره";
+    const best_seller_count = "6";
     try{
         await fetchAndStoreData('GET', `${base_url}/api/restaurant/get/${restaurant_name}`, 'restaurant', {});
         await fetchAndStoreData('GET', `${base_url}/api/restaurant/branch/list/${restaurant_name}`, 'branch', {});
@@ -14,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await fetchAndStoreData('GET', base_url+`/api/restaurant/hour/list/${branch_id}`, 'hour', {});
         await fetchAndStoreData('GET', base_url+`/api/restaurant/social_media/list/${restaurant_id}`, 'social', {});
 
-        await fetchAndStoreData('GET', `${base_url}/api/menu/item/best?restaurant=${restaurant_id}&size=3`, 'best_sellers', {});
+        await fetchAndStoreData('GET', `${base_url}/api/menu/item/best?restaurant=${restaurant_id}&size=${best_seller_count}`, 'best_sellers', {});
 
         fillBestSeller(restaurant, branch);
         fillContact(branch);
@@ -56,7 +57,7 @@ function createBestSellerItem(item){
     const img = document.createElement('img');
     const p = document.createElement('p');
 
-    mainDiv.className = "item-center flex w-full justify-center";
+    mainDiv.className = "item-center flex shrink-0 w-28 justify-center";
     button.className = "item-center w-full flex-col justify-center";
     innerDiv.className = "flex w-full justify-center";
     img.className = "h-20 w-20 rounded-[16px]";

@@ -23,6 +23,9 @@ function actionButton(){
 }
 
 async function listenInputs(){
+    const button = document.getElementsByClassName('action-button')[0];
+    button.disabled = true
+
     const phoneInput = document.getElementById('phone');
     if (phoneInput.value.length == 11 && phoneInput.value.startsWith('09') && isOnlyNumbers(phoneInput.value)){
         const headers = {}
@@ -41,6 +44,8 @@ async function listenInputs(){
     } else {
         showError('فرمت شماره تلفن اشتباه است.')
     }
+
+    button.disabled = false
 }
 
 

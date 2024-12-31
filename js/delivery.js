@@ -6,17 +6,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function connectActionButton(){
     const order = Order.loadFromLocalStorage() || new Order();
-
+    const cart = new Cart(); 
+    
     const button = document.getElementsByClassName('action-button')[0];
     const note = document.getElementById('note');
-    button.addEventListener('click', ()=>{
+    button.addEventListener('click', async ()=>{
         order.refresh();
         if(order.deliveryType=="takeout"){
-            order.updateCustomerNote(note.value)
+            order.updateCustomerNote(note.value);
             window.location.href = "send.html";
         } else if (order.deliveryType == "dine-in"){
-            order.updateCustomerNote(note.value)
-            window.location.href = "status.html";
+            order.updateCustomerNote(note.value);
+            const customer = getWithExpiry('customer');
+            if (customer){
+                const body = order.createBody(cart)
+                const headers = {
+                    'authorization': `bearer ${customer.id}`,
+                }
+                const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
+                console.log(response);
+                if (response.id){
+                }
+                window.location.href = "status.html?status=OK&state=1008";
+            } else {
+                showError('لطفا ابتدا وارد سایت شوید');
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 3000);
+            }
         } else {
             showError('لطفا نوع دریافت را انتخاب کنید');
         }
