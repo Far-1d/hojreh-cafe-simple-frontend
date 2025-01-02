@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         window.location.href = "main.html";
         return;
     }
-
+    
     const cart = new Cart();
     if (getWithExpiry('customer')){
         if (cart.getItems()){ // there are items in cart
@@ -13,18 +13,18 @@ document.addEventListener('DOMContentLoaded', ()=>{
             return;
         }
     }
-    actionButton();
+
+
+    const button = document.getElementsByClassName('action-button')[0];
+    button.addEventListener('click', listenInputs)
 
 });
 
-function actionButton(){
-    const button = document.getElementsByClassName('action-button')[0];
-    button.addEventListener('click', listenInputs)
-}
 
-async function listenInputs(){
+async function listenInputs(event){
     const button = document.getElementsByClassName('action-button')[0];
-    button.disabled = true
+    button.setAttribute('disabled', 'true');
+    console.log('processinggg new req');
 
     const phoneInput = document.getElementById('phone');
     if (phoneInput.value.length == 11 && phoneInput.value.startsWith('09') && isOnlyNumbers(phoneInput.value)){
@@ -33,19 +33,24 @@ async function listenInputs(){
         form.append('phone_number', phoneInput.value);
         form.append('restaurant', getWithExpiry('restaurant').id);
 
-        const response = await fetchAndStoreData('POST', `${base_url}/api/customer/signup`, 'customer', headers, form);
         try{
+            const response = await fetchAndStoreData('POST', `${base_url}/api/customer/signup`, 'customer', headers, form)
+
             const phone = response.phone_number;
-            createCodeInput();
+            setTimeout(() => {
+                createCodeInput();
+            }, 2000);
             showSuccess('کد ورود به شماره شما ارسال شد');
         } catch (error) {
-            showError(`مشکلی پیش آمد : ${error}`)
+            showError(`${error.message}`)
+            button.textContent = "تایید";
+            button.removeAttribute('disabled');
         }
     } else {
-        showError('فرمت شماره تلفن اشتباه است.')
+        showError('فرمت شماره تلفن اشتباه است')
+        button.textContent = "تایید";
+        button.removeAttribute('disabled');
     }
-
-    button.disabled = false
 }
 
 
@@ -75,27 +80,45 @@ function createCodeInput(){
     const button = document.getElementsByClassName('action-button')[0];
     button.removeEventListener('click', listenInputs);
     button.addEventListener('click', sendCode);
+
+    button.textContent = "تایید";
+    button.removeAttribute('disabled');
 }
 
 
 async function sendCode(){
     const phoneInput = document.getElementById('phone');
     const codeInput = document.getElementById('code');
-
+    if (! codeInput.value.length) {
+        showError('لطفا کد را وارد کنید');
+        return
+    }
     if (phoneInput.value.length == 11 && phoneInput.value.startsWith('09') && isOnlyNumbers(phoneInput.value)){
         const headers = {}
         const form = new FormData();
         form.append('phone_number', phoneInput.value);
         form.append('code', codeInput.value);
 
-        const response = await fetchAndStoreData('POST', `${base_url}/api/customer/verify`, 'customer', headers, form);
         try{
+            const response = await fetchAndStoreData('POST', `${base_url}/api/customer/verify`, 'customer', headers, form);
             const id = response.id;
             setWithExpiry('customer', response, 60*60*12);
-            window.location.href = "delivery.html";
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const next = urlParams.get('next');
+            
+            if (next == "profile"){
+                window.location.href = "profile.html";
+            } else if (next == "delivery"){
+                window.location.href = "delivery.html";
+            } else if (next == "history"){
+                window.location.href = "order-history.html";
+            }
+
             return;
         } catch (error) {
-            showError(`مشکلی پیش آمد : ${error}`)
+            showError(`کد وارد شده اشتباه است`)
         }
     } else {
         showError('فرمت شماره تلفن اشتباه است.')

@@ -33,7 +33,8 @@ async function fetchAndStoreData(method, url, key, headers, json_data) {
             return await response.json();
         }
     } catch (error) {
-        console.log('Error fetching or storing data:', error);
+        if (error.message.includes('NetworkError')) throw new Error("خطا در ارتباط با سرور");
+        throw new Error(error.message);
     }
 }
 
@@ -113,9 +114,7 @@ function getWithExpiry(key) {
 
 
 
-function toggleMenu() {
-    console.log('togling menu!')
-    
+function toggleMenu() {    
     const menu = document.getElementById('sideMenu');
     menu.classList.toggle('openMenu'); // Toggle the 'open' class
     
@@ -124,10 +123,14 @@ function toggleMenu() {
 }
 
 function toggleClose() {
-    console.log('togling menu!')
     const menu = document.getElementById('sideMenu');
     menu.classList.toggle('openMenu'); // Toggle the 'open' class
     
     const closeMenuBtn = document.getElementById('closeMenu');
     closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
+}
+
+function logout(){
+    localStorage.removeItem('customer');
+    window.location.href = "main.html";
 }

@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = "login.html";
         return;
     }
+    
+    let order = Order.loadFromLocalStorage() || new Order();
 
     try {
         const headers = {
@@ -23,22 +25,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         const restaurant_id = restaurant.id;
         await fetchAndStoreData('GET', `${base_url}/api/order/deliver/list?restaurant=${restaurant_id}`, 'deliverTimes', {});
         
-        fillAddresses();
-        createTime();
-        connectDiscountBtn();
+        fillAddresses(order);
+        createTime(order);
         loadPrice();
-        connectActionButtons();
+        connectActionButtons(order);
     } catch (error) {
         showError('مشکل در اتصال به سرور');  
     }
 });
 
-function fillAddresses(){
+function fillAddresses(order){
     const list = document.getElementsByClassName('address-list')[0];
     const addresses = getWithExpiry('addresses');
     if(addresses.length){
         addresses.forEach((address, idx) => {
-            const div = createAddress(address);
+            const div = createAddress(address, order);
             list.appendChild(div);
         });
     }
@@ -46,7 +47,7 @@ function fillAddresses(){
 
 }
 
-function createAddress(address){
+function createAddress(address, order){
     const mainDiv = document.createElement('div');
     const innerDiv = document.createElement('div');
     const p_tag = document.createElement('p');
@@ -55,7 +56,7 @@ function createAddress(address){
 
     mainDiv.className = "flex items-center justify-between h-20 px-4 py-2 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] hover:border border-[#4FB9E6]";
     innerDiv.className = "flex-col items-center justify-start";
-    p_tag.className = "text-sm text-[#665541]";
+    p_tag.className = "text-sm text-[#665541] font-bold";
     span.className = "text-xs text-[#665541]";
     button.className = "text-sm underline text-[#665541]";
 
@@ -64,7 +65,7 @@ function createAddress(address){
     button.style.fontWeight = 700;
 
     p_tag.textContent = address.name;
-    span.textContent = `${address.street} ${address.alley} ${address.number} ${address.unit}`;
+    span.textContent = address.detail;
     button.textContent = "ویرایش";
 
     innerDiv.appendChild(p_tag);
@@ -74,10 +75,9 @@ function createAddress(address){
 
     button.addEventListener('click', ()=>{
         setWithExpiry('updateAddress', address, 60*5);
-        window.location.href="address.html";
+        window.location.href="address.html?return=send";
     })
 
-    let order = Order.loadFromLocalStorage() || new Order();
     mainDiv.addEventListener('click', function (){
         const list = document.getElementsByClassName('address-list')[0];
         const divs = list.querySelectorAll('div');
@@ -88,9 +88,7 @@ function createAddress(address){
 
         mainDiv.classList.add('selected');
         // const address_id = mainDiv.dataset.uuid;
-        
-        order.updateAddress(address.id);
-        
+        order.updateAddress(address.id);        
     })
 
     if (order.address == address.id){
@@ -112,22 +110,22 @@ function createNewButton(){
     
     button.addEventListener('click', ()=>{
         localStorage.removeItem('updateAddress');
-        window.location.href="address.html";
+        window.location.href="address.html?return=send";
     })
 
     return mainDiv;
 }
 
-function createTime(){
+function createTime(order){
     const listDiv = document.getElementsByClassName('deliver-time')[0]; 
     const times = getWithExpiry('deliverTimes');
     times.forEach(time=>{
-        const div = createTimeElement(time);
+        const div = createTimeElement(time, order);
         listDiv.appendChild(div);
     })
 }
 
-function createTimeElement(time){
+function createTimeElement(time, order){
     const mainDiv = document.createElement('div');
     const button = document.createElement('button');
     mainDiv.className = "my-3 h-full w-full";
@@ -136,7 +134,6 @@ function createTimeElement(time){
     button.dataset.uuid = time.id;
     tippy(button, {content:`${time.time}<br>${time.description}`});
     
-    let order = Order.loadFromLocalStorage() || new Order();
     button.addEventListener('click', function (){
         const listDiv = document.getElementsByClassName('deliver-time')[0];
         const times = listDiv.querySelectorAll('.time');
@@ -145,7 +142,6 @@ function createTimeElement(time){
         })
         button.classList.add('selected-time');
 
-        
         order.updateDeliveryTime(button.dataset.uuid);
     })
 
@@ -157,63 +153,9 @@ function createTimeElement(time){
     return mainDiv;
 }
 
-function connectDiscountBtn(){
-    const btn = document.getElementsByClassName('apply-button')[0];
 
-    btn.addEventListener('click', function(){
-        const inp = document.getElementById('discount')
-        if (inp.value.trim() !== ""){
-            applyDiscount(inp.value.trim());
-        }
-    })
-}
 
-async function applyDiscount(discountCode){
-    try{
-
-        await getDiscount(discountCode);
-
-        const discount = getWithExpiry('discount');
-        if (discount === null){
-            showError('کد نامعتبر است');
-            loadPrice();
-            return;
-        } else {
-            const order = Order.loadFromLocalStorage() || new Order();
-            order.updateDiscount(discount.id);
-            loadPrice();
-        }
-    } catch (error){
-        console.log(error);
-        showError('مشکل در اتصال به سرور');
-    }
-}
-
-async function getDiscount(discountCode){
-    if (getWithExpiry('customer')){
-        const headers = {
-            'authorization': `bearer ${getWithExpiry('customer').id}`
-        }
-        const options = {
-            method: "GET",
-            headers: headers
-        };
-        const response = await fetch(`${base_url}/api/order/discount/validate?code=${discountCode}`, options);
-        if (!response.ok) {
-            localStorage.removeItem('discount');
-        } 
-        else {
-            let data = [];
-            const text = await response.text();
-            if (text) {
-                data = JSON.parse(text); // Parse as JSON
-            }
-            setWithExpiry('discount', data, 60*10); //10 minute
-        }
-    }
-}
-
-function connectActionButtons(){
+function connectActionButtons(order){
     const returnBtn = document.getElementsByClassName('return-button')[0];
     returnBtn.addEventListener('click', ()=>{
         window.location.href = "delivery.html";
@@ -224,7 +166,6 @@ function connectActionButtons(){
     forwardBtn.addEventListener('click', async ()=>{
         forwardBtn.textContent = "درحال پردازش";
         const cart = new Cart();
-        const order = Order.loadFromLocalStorage() || new Order();
         const customer = getWithExpiry('customer');
 
         if (order.isComplete()){

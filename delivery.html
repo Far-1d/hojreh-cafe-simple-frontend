@@ -50,7 +50,7 @@
 
         <!-- delivery form -->
         <div class="mt-6 mb-32 flex w-full flex-col items-center justify-center">
-          <h2 class="w-full py-2 text-xl text-[#665541]" style="font-weight:700" dir="rtl">توضیحات خود را وارد کنید</h2>
+          <h2 class="w-full py-2 text-xl text-[#665541]" style="font-weight:700" dir="rtl">توضیحات سفارش</h2>
           <textarea name="Description" placeholder="توضیحات" id="note" class="min-w-full rounded-[16px] border border-[#241E17] bg-[#FFFDFA] px-3 py-2" rows="8" dir="rtl"> </textarea>
         </div>
 
@@ -60,7 +60,7 @@
           <a href="/order-history.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">سفارش های پیشین</a>
           <a href="/about-us.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">درباره ما</a>
           <div class="w-full h-full"></div>
-          <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">خروج</button>
+          <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]" onclick=logout()>خروج</button>
         </div>
         <div id="closeMenu" class="slide-left" onclick=toggleClose()>
           <img src="/images/close.svg" alt="close" class="h-6 w-6" loading="eager" decoding="async">

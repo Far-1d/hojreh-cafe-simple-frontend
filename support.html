@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
     
     <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
   </head>
   <body class="relative min-h-screen w-full overflow-x-hidden">
     <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: 'Vazirmatn', sans-serif;">
@@ -50,7 +50,7 @@
           <a href="/order-history.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">سفارش های پیشین</a>
           <a href="/about-us.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">درباره ما</a>
           <div class="w-full h-full"></div>
-          <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">خروج</button>
+          <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]" onclick=logout()>خروج</button>
         </div>
         <div id="closeMenu" class="slide-left" onclick=toggleClose()>
           <img src="/images/close.svg" alt="close" class="h-6 w-6" loading="eager" decoding="async">

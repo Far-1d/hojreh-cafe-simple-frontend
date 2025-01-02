@@ -7,33 +7,40 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     }
     
     if (! customer){
-        console.log("there is no customer")
-
-        window.location.href = "login.html";
+        window.location.href = "login.html?next=profile";
         return;
     }
 
-    // try {
-    //     const headers = {
-    //         'authorization' : `bearer ${customer.id}`,
-    //     }
-    //     await fetchAndStoreData('GET', `${base_url}/api/customer/address/list`, 'addresses', headers);
+    try {
+        const headers = {
+            'authorization' : `bearer ${customer.id}`,
+        }
+        await fetchAndStoreData('GET', `${base_url}/api/customer/address/list`, 'addresses', headers);
+
+        await fetchAndStoreData('GET', `${base_url}/api/customer/get/${customer.id}`, 'profile', headers);
         
-    //     fillAddresses();
-    // } catch (error) {
-    //     showError('مشکل در اتصال به سرور');  
-    // }
+        fillAddresses();
+        fillProfile();
+    } catch (error) {
+        showError('مشکل در اتصال به سرور');  
+    }
     
-    console.log('casponc')
     const nameEditBtn = document.getElementById('name-edit');
-    console.log(nameEditBtn);
     nameEditBtn.addEventListener('click', ()=>{ToggleEdit('name')})
 
 });
 
 
+function fillProfile(){
+    const profile = getWithExpiry('profile');
+    const name = document.getElementById('name-value');
+    const phone = document.getElementById('phone-value');
+    name.textContent = profile.name;
+    phone.textContent = profile.phone_number;
+}
+
+
 function ToggleEdit(section){
-    console.log('toggkeing ');
     const Container = document.getElementById(`${section}-container`);
     const nameValue = document.getElementById(`${section}-value`);
     const input = document.createElement('input');
@@ -43,23 +50,30 @@ function ToggleEdit(section){
     input.value = nameValue.textContent;
     input.dir = "rtl";
     input.id = section;
-    input.addEventListener('focusout', ()=>{updateProfile(section)})
+    
+    const actionBtn = document.getElementsByClassName('action-button')[0];
+    actionBtn.hidden = false;
+    actionBtn.addEventListener('click', ()=>{updateProfile(section)})
+
     Container.innerHTML = ''
     Container.appendChild(input);
 }
 
 async function updateProfile(section){
+    const customer = getWithExpiry('customer');
+
     const form = new FormData();
     form.append(section, document.getElementById(section).value);
-    const url = `${base_url}/api/customer/update`;
+    
+    const url = `${base_url}/api/customer/update/${customer.id}`;
+    
     const options = {
         method: 'PUT', // Set the HTTP method (GET or POST)
         headers: {},
         body: form
     };
-    console.log('everythong is ok  ', url,  document.getElementById(section).value );
-    // const response = await fetch(url, options);
-    // if (response.ok){
+    const response = await fetch(url, options);
+    if (response.ok){
         const Container = document.getElementById(`${section}-container`);
         const div = document.createElement('div');
         const btn = document.createElement('button');
@@ -84,7 +98,10 @@ async function updateProfile(section){
 
         Container.innerHTML = ``;
         Container.appendChild(div);
-    // }
+
+        const actionBtn = document.getElementsByClassName('action-button')[0];
+        actionBtn.hidden = true;
+    }
 }
 
 
@@ -108,9 +125,9 @@ function createAddress(address){
     const span = document.createElement('span');
     const button = document.createElement('button');
 
-    mainDiv.className = "flex items-center justify-between h-20 px-4 py-2 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] hover:border border-[#4FB9E6]";
+    mainDiv.className = "flex items-center justify-between h-20 px-4 py-2 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] hover:border border-[#4FB9E6] bg-[#FFF6E8]";
     innerDiv.className = "flex-col items-center justify-start";
-    p_tag.className = "text-sm text-[#665541]";
+    p_tag.className = "text-sm text-[#665541] font-bold";
     span.className = "text-xs text-[#665541]";
     button.className = "text-sm underline text-[#665541]";
 
@@ -119,7 +136,7 @@ function createAddress(address){
     button.style.fontWeight = 700;
 
     p_tag.textContent = address.name;
-    span.textContent = `${address.street} ${address.alley} ${address.number} ${address.unit}`;
+    span.textContent = address.detail;
     button.textContent = "ویرایش";
 
     innerDiv.appendChild(p_tag);
@@ -128,8 +145,8 @@ function createAddress(address){
     mainDiv.appendChild(button);
 
     button.addEventListener('click', ()=>{
-        setWithExpiry('updateAddress', address, 60*5);
-        window.location.href="address.html";
+        setWithExpiry('updateAddress', address, 5*60);
+        window.location.href="address.html?return=profile";
     })
 
     return mainDiv;
@@ -139,7 +156,7 @@ function createNewButton(){
     const mainDiv = document.createElement('div');
     const button = document.createElement('button');
 
-    mainDiv.className = "flex items-center justify-between h-12 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] hover:border border-[#4FB9E6]";
+    mainDiv.className = "flex items-center justify-between h-12 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] hover:border border-[#4FB9E6] bg-[#FFF6E8]";
     button.className = "w-full h-full text-sm";
     button.id = "new-address";
     button.textContent = "آدرس جدید";
@@ -148,7 +165,7 @@ function createNewButton(){
     
     button.addEventListener('click', ()=>{
         localStorage.removeItem('updateAddress');
-        window.location.href="address.html";
+        window.location.href="address.html?return=profile";
     })
 
     return mainDiv;

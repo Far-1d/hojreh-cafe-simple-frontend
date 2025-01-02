@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
     
     <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/history.js"></script>
   </head>
   <body class="relative min-h-screen w-full overflow-x-hidden">
     <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: 'Vazirmatn', sans-serif;">
@@ -30,7 +31,15 @@
             </div>
           </button>
         </nav>
+        
 
+        <h1 class="w-full text-center font-semibold text-[#665541] text-2xl my-6 mt-14">لیست سفارشات</h1>
+        
+        <div class="flex w-full h-full items-center justify-center overflow-y-hidden">
+          <div id="history-container" class="flex w-full h-[70vh] flex-col items-center justify-start p-2 gap-8 overflow-y-auto" dir="rtl">
+
+          </div>
+        </div>
 
         <!-- menu -->
       <div id="sideMenu" class="slide-menu flex flex-col items-center justify-start bg-[#FFF6E8] py-8">
@@ -38,7 +47,7 @@
         <a href="/order-history.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">سفارش های پیشین</a>
         <a href="/about-us.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">درباره ما</a>
         <div class="w-full h-full"></div>
-        <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">خروج</button>
+        <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]" onclick=logout()>خروج</button>
       </div>
       <div id="closeMenu" class="slide-left" onclick=toggleClose()>
         <img src="/images/close.svg" alt="close" class="h-6 w-6" loading="eager" decoding="async">
