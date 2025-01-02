@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 async function listenInputs(event){
     const button = document.getElementsByClassName('action-button')[0];
     button.setAttribute('disabled', 'true');
-    console.log('processinggg new req');
 
     const phoneInput = document.getElementById('phone');
     if (phoneInput.value.length == 11 && phoneInput.value.startsWith('09') && isOnlyNumbers(phoneInput.value)){

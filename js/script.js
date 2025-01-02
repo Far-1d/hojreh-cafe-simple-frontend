@@ -114,7 +114,7 @@ function getWithExpiry(key) {
 
 
 
-function toggleMenu() {    
+function toggleMenu() {
     const menu = document.getElementById('sideMenu');
     menu.classList.toggle('openMenu'); // Toggle the 'open' class
     
@@ -129,6 +129,15 @@ function toggleClose() {
     const closeMenuBtn = document.getElementById('closeMenu');
     closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
 }
+document.addEventListener('DOMContentLoaded', ()=>{
+    const button = document.querySelector('#sideMenu button');
+    
+    if(getWithExpiry('customer')){
+        button.hidden = false;
+    } else {
+        button.hidden = true;
+    }
+})
 
 function logout(){
     localStorage.removeItem('customer');
