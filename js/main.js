@@ -125,7 +125,7 @@ function fillWorkHour(){
         div.className = "flex items-center justify-between w-full h-full"
 
         const p1 = document.createElement('p'); 
-        p1.className = "my-2 font-normal text-sm w-full line-clamp-1 text-neutral-900"
+        p1.className = "my-2 font-normal text-sm shrink-0 line-clamp-1 text-neutral-900"
         p1.textContent = ` ${days[hour.day]}`
 
         const p2 = document.createElement('p'); 
