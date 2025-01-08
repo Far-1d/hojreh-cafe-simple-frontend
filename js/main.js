@@ -140,7 +140,7 @@ function fillWorkHour(){
 }
 
 function fillSocialMedia(restaurant){
-    const parsedData = setWithExpiry('social');
+    const parsedData = getWithExpiry('social');
     
     // about us button text
     const instagram_text = document.getElementsByClassName("instagram_text")[0];

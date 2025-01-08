@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    console.log(urlParams.has('status'), urlParams.has('code'));
 
     if (urlParams.has('status')){
         if (urlParams.get('status')=="OK" && !urlParams.has('code')){
@@ -31,7 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function fillOrderStatus(isTakeout=true){
-    console.log('order successfull');
     const mainDiv = document.getElementsByClassName('status-div')[0];
     mainDiv.innerHTML = `
         <div class="prepration flex items-center justify-center h-12 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] border-[#018FCC] text-xl text-white bg-[#2CA7DB]" style="font-weight:700" >
@@ -56,7 +54,6 @@ function fillOrderStatus(isTakeout=true){
 }
 
 function fillError(code){
-    console.log('filling error', code);
     const mainDiv = document.getElementsByClassName('status-div')[0];
     let title = '';
     let description = '';

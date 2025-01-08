@@ -1,39 +1,71 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    const customer = getWithExpiry('customer');
+    if(! customer){
+        showError('لطفا ابتدا وارد سایت شوید');
+        setTimeout(() => {
+            window.location.href = "login.html?next=delivery";
+        }, 3000);
+    }
+    const cart = new Cart();
+    if (! cart.items){
+        window.location.href = "menu.html";
+    }
 
-    connectActionButton();
+    connectActionButton(cart);
 });
 
 
-function connectActionButton(){
+function connectActionButton(cart){
     const order = Order.loadFromLocalStorage() || new Order();
-    const cart = new Cart(); 
-    
+
     const button = document.getElementsByClassName('action-button')[0];
     const note = document.getElementById('note');
     button.addEventListener('click', async ()=>{
         order.refresh();
+        order.updateCustomerNote(note.value);
+
         if(order.deliveryType=="takeout"){
-            order.updateCustomerNote(note.value);
             window.location.href = "send.html";
         } else if (order.deliveryType == "dine-in"){
-            order.updateCustomerNote(note.value);
             const customer = getWithExpiry('customer');
-            if (customer){
-                const body = order.createBody(cart)
-                const headers = {
-                    'authorization': `bearer ${customer.id}`,
-                }
-                const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
-                console.log(response);
-                if (response.id){
-                }
-                window.location.href = "status.html?status=OK&state=1008";
-            } else {
-                showError('لطفا ابتدا وارد سایت شوید');
-                setTimeout(() => {
-                    window.location.href = "login.html";
-                }, 3000);
+            
+            // without payment code
+
+            // const body = order.createBody(cart)
+            // const headers = {
+            //     'authorization': `bearer ${customer.id}`,
+            // }
+            // const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
+            // console.log(response);
+            // if (response.id){
+                // window.location.href = "status.html?status=OK&state=1008";
+            // }
+
+            // with payment code
+            const body = order.createBody(cart)
+            const headers = {
+                'authorization': `bearer ${customer.id}`,
             }
+            try {
+                const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
+                if (response.id){
+                    const form = new FormData();
+                    form.append('order', response.id);
+                    const newResponse = await fetchAndStoreData('POST', `${base_url}/api/payment/new?gateway=zarinpal`, 'payment', headers, form);
+                    if (newResponse.payment){
+                        const returnUrl = `${front_url}/status.html`;
+                        window.location.href = `${base_url}/api/payment/pay/zarinpal?payment=${newResponse.payment}&return=${returnUrl}`
+                    }
+                } else {
+                    console.log(getWithExpiry('error'));
+                    forwardBtn.textContent = "پرداخت";
+                    showError('مشکل در اتصال به سرور');
+                    return;
+                }
+            } catch (error) {
+                showError('خطا اجرای برنامه')
+            }
+
         } else {
             showError('لطفا نوع دریافت را انتخاب کنید');
         }
@@ -44,6 +76,7 @@ function connectActionButton(){
 
     if (order.customerNote != '') note.textContent = order.customerNote;
 }
+
 
 
 function toggleButton(buttonId) {

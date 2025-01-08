@@ -113,6 +113,8 @@ async function sendCode(){
                 window.location.href = "delivery.html";
             } else if (next == "history"){
                 window.location.href = "order-history.html";
+            } else {
+                window.location.href = "menu.html";
             }
 
             return;

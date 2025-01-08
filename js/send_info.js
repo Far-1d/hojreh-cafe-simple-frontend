@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         showError('مشکل در اتصال به سرور');  
     }
+
+    var checkBox = document.getElementById("PayAtHome");
+    checkBox.addEventListener('click', togglePayment);
+
 });
 
 function fillAddresses(order){
@@ -167,35 +171,58 @@ function connectActionButtons(order){
         forwardBtn.textContent = "درحال پردازش";
         const cart = new Cart();
         const customer = getWithExpiry('customer');
+        var checkBox = document.getElementById("PayAtHome");
 
-        if (order.isComplete()){
+        if (order.isComplete() && cart.items.length ){
             const body = order.createBody(cart)
             const headers = {
                 'authorization': `bearer ${customer.id}`,
             }
-            const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
-            if (response.id){
-                const form = new FormData();
-                form.append('order', response.id);
-                const newResponse = await fetchAndStoreData('POST', `${base_url}/api/payment/new?gateway=zarinpal`, 'payment', headers, form);
-                if (newResponse.payment){
-                    const returnUrl = `${front_url}/status.html`;
-                    window.location.href = `${base_url}/api/payment/pay/zarinpal?payment=${newResponse.payment}&return=${returnUrl}`
+            if (checkBox.checked){
+                const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
+                console.log(response);
+                if (response.id){
+                    window.location.href = "status.html?status=OK";
+                } else {
+                    showError('خطایی رخ داد، لطفا لحظاتی دیگر مجدد امتحان کنید');
                 }
             } else {
-                console.log(getWithExpiry('error'));
-                forwardBtn.textContent = "پرداخت";
-                showError('مشکل در اتصال به سرور');
-                return;
+                try {
+                    const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
+                    if (response.id){
+                        const form = new FormData();
+                        form.append('order', response.id);
+                        const newResponse = await fetchAndStoreData('POST', `${base_url}/api/payment/new?gateway=zarinpal`, 'payment', headers, form);
+                        if (newResponse.payment){
+                            const returnUrl = `${front_url}/status.html`;
+                            window.location.href = `${base_url}/api/payment/pay/zarinpal?payment=${newResponse.payment}&return=${returnUrl}`
+                        }
+                    } else {
+                        console.log(getWithExpiry('error'));
+                        forwardBtn.textContent = "پرداخت";
+                        showError('مشکل در اتصال به سرور');
+                        return;
+                    }
+                } catch (error) {
+                    showError('خطا اجرای برنامه')
+                }
             }
+        } else if (!order.isComplete() && !cart.items.length){
+            showError('سبد خرید خالی است - اطلاعات سفارش ناقض است');
+        }else if (!order.isComplete()){
+            showError('اطلاعات سفارش را تکمیل کنید');
+        } else if (!cart.items.length){
+            showError('سبد خرید خالی است');
         } else {
-            showError('لطفا اطلاعات ارسال را تکمیل کنید');
+            showError('مشکلی پیش آمد لطفا مجدد اقدام کنید');
         }
 
-        forwardBtn.textContent = "پرداخت";
+        if (checkBox.checked){
+            forwardBtn.textContent = "تکمیل";
+        } else {
+            forwardBtn.textContent = "پرداخت";
+        }
     });
-
-
 }
 
 
@@ -227,4 +254,12 @@ function loadPrice(){
         // do nothing
     }
 
+}
+
+const togglePayment = ()=>{
+    const forwardBtn = document.getElementsByClassName('forward-button')[0];
+    var checkBox = document.getElementById("PayAtHome");
+
+    if (checkBox.checked) forwardBtn.textContent = "تکمیل";
+    else forwardBtn.textContent = "پرداخت"
 }

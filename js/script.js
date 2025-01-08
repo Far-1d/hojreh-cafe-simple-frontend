@@ -38,8 +38,8 @@ async function fetchAndStoreData(method, url, key, headers, json_data) {
     }
 }
 
-// const base_url = "http://127.0.0.1:8000"
-const base_url = 'https://django-restaurant.chbk.app'
+const base_url = "http://127.0.0.1:8000"
+// const base_url = 'https://django-restaurant.chbk.app'
 const front_url = "https://hojrehcafe.ir"
 
 function convertToPersianPrice(number) {
