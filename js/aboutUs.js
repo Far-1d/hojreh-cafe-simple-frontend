@@ -40,8 +40,28 @@ const fillAboutUs = ()=>{
     branchphone.href = `tel:${branch.phone}`;
     branchAddr.textContent = branch.location;
 
-    instagramA.href = social.instagram;
-    telegramA.href = social.telegram;
-    xA.href = social.twitter;
-    whatsappA.href = social.whatsapp;
+
+    if (social.instagram){
+        instagramA.href = social.instagram;
+    } else {
+        instagramA.style.display = 'none';
+    }
+
+    if (social.telegram){
+        telegramA.href = social.telegram;
+    } else {
+        telegramA.style.display = 'none';
+    }
+
+    if (social.twitter){
+        xA.href = social.twitter;
+    } else {
+        xA.style.display = 'none';
+    }
+
+    if (social.whatsapp){
+        whatsappA.href = social.whatsapp;
+    } else {
+        whatsappA.style.display = 'none';
+    }
 }
