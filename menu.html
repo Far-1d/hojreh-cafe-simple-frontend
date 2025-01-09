@@ -11,33 +11,38 @@
     
     <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
     <link type="text/css" rel="stylesheet" href="styles/menu.css"/>
+    <link type="text/css" rel="stylesheet" href="styles/dialog.css"/>
     <link type="text/css" rel="stylesheet" href="styles/skeleton.css"/>
     <script src="js/script.js"></script>
-    <script src="js/menu.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/dialog.js"></script>
+    <script src="js/search.js"></script>
   </head>
   <body class="relative min-h-screen w-full bg-[#fff9f0] overflow-x-hidden" style="font-family: 'Vazirmatn', sans-serif;">
     <div class="w-full h-full bg-[#fff9f0] flex items-center justify-center">
     <div class="w-full h-full bg-[#fff9f0] max-w-[520px] p-6 px-10 relative">
       <!-- navbar -->
-      <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
-        <button class="flex w-10 items-center justify-center">
-          <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
-        </button>
+      <div id="nav-container" class="flex w-full">
+        <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+          <button class="flex w-10 items-center justify-center" onclick=showSearch()>
+            <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
+          </button>
 
-        <button class="flex w-16 items-center justify-center overflow-visible" onclick=goToHome()>
-          <img src="/images/logo.png" alt="logo" class="w-[95px] logo" loading="eager" decoding="async"/>
-        </button>
+          <button class="flex w-16 items-center justify-center overflow-visible" onclick=goToHome()>
+            <img src="/images/logo.png" alt="logo" class="w-[95px] logo" loading="eager" decoding="async"/>
+          </button>
 
-        <button class="menu-btn flex w-10 items-center justify-center" onclick=toggleMenu()>
-          <div class="h-8 w-8">
-            <img src="/images/menu.svg" alt="menu" class="h-8 w-8" loading="eager" decoding="async"/>
-          </div>
-        </button>
-      </nav>
+          <button class="menu-btn flex w-10 items-center justify-center" onclick=toggleMenu()>
+            <div class="h-8 w-8">
+              <img src="/images/menu.svg" alt="menu" class="h-8 w-8" loading="eager" decoding="async"/>
+            </div>
+          </button>
+        </nav>
+      </div>
 
       <!-- category list -->
-      <div class="mt-6 h-12 w-full p-[1px]" dir="rtl">
+      <div id="category-list" class="mt-6 h-12 w-full p-[1px]" dir="rtl">
         <div class="category_list flex h-12 w-full mx-3 items-start overflow-y-hidden overflow-x-auto">
           <!-- filled with category buttons -->
 

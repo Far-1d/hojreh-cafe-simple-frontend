@@ -91,24 +91,41 @@ function createCategoryElement(category, idx) {
 }
 
 
-function fillItems(cart){
+function fillItems(cart, isFromSearch=false){
     const itemsDiv = document.getElementsByClassName('item_list')[0];
     itemsDiv.innerHTML = "";
-    const categories = getWithExpiry('category');
-    const items = getWithExpiry('items');
-    
-    categories.forEach((category, idx) => {
-        const catDiv = createCategoryHeader(category.name, idx);
-        itemsDiv.appendChild(catDiv)
-        items.forEach(item=> {
-            if (item.category.id === category.id){
-                // check item.images length
-                const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_item.webp'
-                const itemDiv = createItemElement(item, imgLink, cart)
-                itemsDiv.appendChild(itemDiv)
-            }
+    if (!isFromSearch){
+        const categories = getWithExpiry('category');
+        const items = getWithExpiry('items');
+        
+        categories.forEach((category, idx) => {
+            const catDiv = createCategoryHeader(category.name, idx);
+            itemsDiv.appendChild(catDiv)
+            items.forEach(item=> {
+                if (item.category.id === category.id){
+                    // check item.images length
+                    const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_item.webp'
+                    const itemDiv = createItemElement(item, imgLink, cart)
+                    itemsDiv.appendChild(itemDiv)
+                }
+            })
+        });
+    } else {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'text-xl text-[#665541] w-full my-3 mt-10';
+        resultDiv.style.fontWeight = '700';
+        resultDiv.dir = 'rtl';
+        resultDiv.textContent = 'نتایج';
+        itemsDiv.appendChild(resultDiv);
+
+        const items = getWithExpiry('searchedItems');
+        items.forEach((item,idx) =>{
+            const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_item.webp'
+            const itemDiv = createItemElement(item, imgLink, cart);
+            itemsDiv.appendChild(itemDiv);
         })
-    });
+    }
+
 }
 
 // create a categoty element for item list
