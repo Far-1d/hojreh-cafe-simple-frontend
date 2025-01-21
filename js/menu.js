@@ -156,8 +156,12 @@ function createItemElement(item, image, cart){
     
     // row 1
     const img_div = document.createElement('div');
-    img_div.className = "grid grid-cols-7";
+    img_div.className = "grid grid-cols-7 cursor-pointer";
     img_div.dir = "rtl";
+    img_div.addEventListener('click', ()=>{
+        setWithExpiry('itemDisplayed', item.id, 5*60);
+        window.location.href = "item.html";
+    })
 
     const img_inner_div = document.createElement('div');
     img_inner_div.className = "col-span-3 w-full";
@@ -181,12 +185,8 @@ function createItemElement(item, image, cart){
 
     const button_holder_div = document.createElement('div');
     button_holder_div.className = `flex flex-col justify-center items-start h-full`
-    const redirect_button = document.createElement('button');
-    redirect_button.addEventListener('click', ()=>{
-        setWithExpiry('itemDisplayed', item.id, 5*60);
-        window.location.href = "item.html";
-    })
-
+    const redirect_button = document.createElement('div');
+    
     const h3_name = document.createElement('h3');
     h3_name.className = "text-xl font-bold text-[#665541] py-2";
     h3_name.textContent = item.name;
@@ -249,6 +249,7 @@ function createItemOptionRow(item, cart){
     return mainDiv;
 }
 
+
 function createItemOptionElement(option, item, cart, is_last){
     {/* option 1  */}
     const mainDiv = document.createElement('div')
@@ -270,6 +271,7 @@ function createItemOptionElement(option, item, cart, is_last){
     mainDiv.appendChild(btnDiv);
     return mainDiv;
 }
+
 
 function itemCartButton(item, cart, option=null) {
     const buttonContainer = document.createElement('div'); // Create a container for the button
@@ -346,7 +348,6 @@ function itemCartButton(item, cart, option=null) {
     updateButtonState(); // Initial call to set up the button state
     return buttonContainer; // Return the container with the appropriate button(s)
 }
-
 
 
 function cartButton(){
