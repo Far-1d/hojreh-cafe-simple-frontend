@@ -35,8 +35,8 @@ const fillAboutUs = ()=>{
 
     // fill elements
     restauName.textContent = restaurant.name;
-    restauDesc.textContent = restaurant.description;
-    branchphone.textContent = branch.phone;
+    restauDesc.textContent = convertToPersianNumber(restaurant.description);
+    branchphone.textContent = convertToPersianNumber(branch.phone);
     branchphone.href = `tel:${branch.phone}`;
     branchAddr.textContent = branch.location;
 
