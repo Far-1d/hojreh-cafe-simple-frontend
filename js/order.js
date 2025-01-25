@@ -49,14 +49,26 @@ class Order {
     }
 
     saveToLocalStorage() {
-        localStorage.setItem('orderData', JSON.stringify(this.getOrderDetails()));
+        const orderDetails = this.getOrderDetails();
+        const expiryTime = Date.now() + 30 * 60 * 1000; // 30 minutes from now
+        const dataToStore = {
+            orderDetails,
+            expiry: expiryTime
+        };
+        localStorage.setItem('orderData', JSON.stringify(dataToStore));
     }
 
     // Static method to load order data from localStorage
     static loadFromLocalStorage() {
         const orderData = localStorage.getItem('orderData');
         if (orderData) {
-            const { deliveryType, customerNote, address, discount, deliveryTime } = JSON.parse(orderData);
+            const { orderDetails, expiry } = JSON.parse(orderData);
+            // Check if the data has expired
+            if (Date.now() > expiry) {
+                localStorage.removeItem('orderData'); // Remove expired data
+                return null; // Return null if the data is expired
+            }
+            const { deliveryType, customerNote, address, discount, deliveryTime } = orderDetails;
             return new Order(deliveryType, customerNote, address, discount, deliveryTime);
         }
         return null; // Return null if no order data exists
@@ -74,12 +86,15 @@ class Order {
     refresh(){
         const orderData = localStorage.getItem('orderData');
         if (orderData) {
-            const { deliveryType, customerNote, address, discount, deliveryTime } = JSON.parse(orderData);
-            this.deliveryType= deliveryType;
-            this.customerNote= customerNote;
-            this.address= address;
-            this.discount= discount;
-            this.deliveryTime= deliveryTime;
+            const { orderDetails, expiry } = JSON.parse(orderData);
+            if (Date.now() < expiry) {
+                const { deliveryType, customerNote, address, discount, deliveryTime } = orderDetails;
+                this.deliveryType= deliveryType;
+                this.customerNote= customerNote;
+                this.address= address;
+                this.discount= discount;
+                this.deliveryTime= deliveryTime;
+            }
         }
     }
 

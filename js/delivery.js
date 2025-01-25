@@ -57,7 +57,6 @@ function connectActionButton(cart){
                         window.location.href = `${base_url}/api/payment/pay/zarinpal?payment=${newResponse.payment}&return=${returnUrl}`
                     }
                 } else {
-                    console.log(getWithExpiry('error'));
                     forwardBtn.textContent = "پرداخت";
                     showError('مشکل در اتصال به سرور');
                     return;
@@ -85,8 +84,7 @@ function toggleButton(buttonId) {
     
     const order = Order.loadFromLocalStorage() || new Order();
     order.updateDeliveryType('')
-    
-    if (buttonId === 'button1') {
+        if (buttonId === 'button1') {
         // Toggle Button 1
         button1.classList.toggle('selected');
         // If Button 1 is selected, deselect Button 2

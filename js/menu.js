@@ -6,53 +6,110 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    const cart = new Cart(); // Create an instance of Cart
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const isSearching = urlParams.get('search');
 
-    // get menus
-    const branch = getWithExpiry('branch')[0];
-    const branch_id = branch.id;
+    if (isSearching != "true"){
+        const cart = new Cart(); // Create an instance of Cart
     
-    try{
-        if (! getWithExpiry('menu')){
-            await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {});
-        }
+        // get menus
+        const branch = getWithExpiry('branch')[0];
+        const branch_id = branch.id;
         
-        if (! getWithExpiry('category')){
-            // get categories
-            const menu = getWithExpiry('menu')[0];
-            const menu_id = menu.id;
-            await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {});
-        }
-        
-        if (! getWithExpiry('items')){
-            // get items for each category , concatenate them, store 'em
-            const categories = getWithExpiry('category');
-            let items = [];
-
-            // Use Promise.all to wait for all fetch requests
-            const itemFetchPromises = categories.map(async (category) => {
-                const category_id = category.id;
-                await fetchAndStoreData('GET', `${base_url}/api/menu/item/list/${category_id}`, 'cat_items', {});
-                const catItems = getWithExpiry('cat_items') || [];
-                return catItems; // Return items for this category
-            });
-
-            // Wait for all item fetches to complete
-            const fetchedItemsArrays = await Promise.all(itemFetchPromises);
+        try{
+            if (! getWithExpiry('menu')){
+                await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*60*24);
+            }
             
-            // Flatten the array of arrays into a single array
-            fetchedItemsArrays.forEach(catItems => {
-                items = items.concat(catItems);
-            });
-
-            setWithExpiry("items", items, 10*60);
+            if (! getWithExpiry('category')){
+                // get categories
+                const menu = getWithExpiry('menu')[0];
+                const menu_id = menu.id;
+                await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {});
+            }
+            
+            if (! getWithExpiry('items')){
+                // get items for each category , concatenate them, store 'em
+                const categories = getWithExpiry('category');
+                let items = [];
+    
+                // Use Promise.all to wait for all fetch requests
+                const itemFetchPromises = categories.map(async (category) => {
+                    const category_id = category.id;
+                    await fetchAndStoreData('GET', `${base_url}/api/menu/item/list/${category_id}`, 'cat_items', {});
+                    const catItems = getWithExpiry('cat_items') || [];
+                    return catItems; // Return items for this category
+                });
+    
+                // Wait for all item fetches to complete
+                const fetchedItemsArrays = await Promise.all(itemFetchPromises);
+                
+                // Flatten the array of arrays into a single array
+                fetchedItemsArrays.forEach(catItems => {
+                    items = items.concat(catItems);
+                });
+                
+                setWithExpiry("items", items, 10*60);
+            }
+            fillCategory();
+            fillItems(cart);
+        } catch (error) {
+            // console.error("Error fetching data:", error);
         }
-        fillCategory();
-        fillItems(cart);
-    } catch (error) {
-        console.error("Error fetching data:", error);
+        connect_scroll_functionality();
+    } else {
+        // fill items
+        const categoryContainer = document.getElementById('category-list');
+        categoryContainer.style.display = 'none';
+
+        // clear skeleton
+        const itemsDiv = document.getElementsByClassName('item_list')[0];
+        itemsDiv.innerHTML = "<p class='mt-10 text-[#241E17]'>متن جستجو را وارد کنید</p>";
+
+        try {
+            // get menus
+            const branch = getWithExpiry('branch')[0];
+            const branch_id = branch.id;
+            if (! getWithExpiry('menu')){
+                await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*60*24);
+            }
+
+            if (! getWithExpiry('category')){
+                // get categories
+                const menu = getWithExpiry('menu')[0];
+                const menu_id = menu.id;
+                await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {});
+            }
+            
+            if (! getWithExpiry('items')){
+                // get items for each category , concatenate them, store 'em
+                const categories = getWithExpiry('category');
+                let items = [];
+    
+                // Use Promise.all to wait for all fetch requests
+                const itemFetchPromises = categories.map(async (category) => {
+                    const category_id = category.id;
+                    await fetchAndStoreData('GET', `${base_url}/api/menu/item/list/${category_id}`, 'cat_items', {});
+                    const catItems = getWithExpiry('cat_items') || [];
+                    return catItems; // Return items for this category
+                });
+    
+                // Wait for all item fetches to complete
+                const fetchedItemsArrays = await Promise.all(itemFetchPromises);
+                
+                // Flatten the array of arrays into a single array
+                fetchedItemsArrays.forEach(catItems => {
+                    items = items.concat(catItems);
+                });
+    
+                setWithExpiry("items", items, 10*60);
+            }
+
+        } catch (error) {
+            // console.log(error)
+        }
     }
-    connect_scroll_functionality();
     cartButton();
 });
 
@@ -104,7 +161,7 @@ function fillItems(cart, isFromSearch=false){
             items.forEach(item=> {
                 if (item.category.id === category.id){
                     // check item.images length
-                    const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_item.webp'
+                    const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_pic.png'
                     const itemDiv = createItemElement(item, imgLink, cart)
                     itemsDiv.appendChild(itemDiv)
                 }
@@ -124,6 +181,11 @@ function fillItems(cart, isFromSearch=false){
             const itemDiv = createItemElement(item, imgLink, cart);
             itemsDiv.appendChild(itemDiv);
         })
+        if (!items.length){
+            const p = document.createElement('p');
+            p.textContent = "موردی یافت نشد";
+            itemsDiv.appendChild(p);
+        }
     }
 
 }
@@ -189,7 +251,7 @@ function createItemElement(item, image, cart){
     
     const h3_name = document.createElement('h3');
     h3_name.className = "text-xl font-bold text-[#665541] py-2";
-    h3_name.textContent = item.name;
+    h3_name.textContent = convertToPersianNumber(item.name);
 
     // single word
     const sw_span = document.createElement('span');
@@ -213,16 +275,18 @@ function createItemElement(item, image, cart){
     const row2_div1 = document.createElement('div');
     row2_div1.className = "mt-3 flex w-full items-center justify-between";
 
-    const price_span = document.createElement('span');
-    price_span.className = "text-xl font-bold text-[#665541]";
-    price_span.textContent = convertToPersianPrice(item.price);
-
-    const row2_div2 = document.createElement('div');
-    const cart_button = itemCartButton(item, cart)
-
-    row2_div2.appendChild(cart_button);
-    row2_div1.appendChild(row2_div2);
-    row2_div1.appendChild(price_span);
+    if ((item.options.length && item.own_price_visible) || !item.options.length){
+        const price_span = document.createElement('span');
+        price_span.className = "text-xl font-bold text-[#665541]";
+        price_span.textContent = convertToPersianPrice(item.price);
+    
+        const row2_div2 = document.createElement('div');
+        const cart_button = itemCartButton(item, cart)
+    
+        row2_div2.appendChild(cart_button);
+        row2_div1.appendChild(row2_div2);
+        row2_div1.appendChild(price_span);
+    }
 
     
     mainDiv.appendChild(img_div);

@@ -15,11 +15,11 @@
     <script src="js/script.js"></script> 
   </head>
   <body class="relative min-h-screen w-full overflow-x-hidden">
-  <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: 'Vazirmatn', sans-serif;">
+  <div class="flex w-full items-center justify-center bg-[#fff9f0]">
     <div class="min-h-screen w-full max-w-[520px] bg-[#fff9f0] p-6 px-10 relative">
       <!-- navbar -->
       <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
-        <button class="flex w-10 items-center justify-center">
+        <button onclick=goToSearch() class="flex w-10 items-center justify-center">
           <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
         </button>
 
@@ -36,7 +36,7 @@
 
       <!-- best seller -->
       <div class="mt-10 flex w-full flex-col items-center justify-between" dir="rtl">
-        <h4 class="best_seller h-8 w-full max-w-[520px] text-sm font-bold"></h4>
+        <h4 class="best_seller h-8 w-full max-w-[520px] text-sm font-bold" style="font-size: larger;"></h4>
         <div class="best_seller_items mt-[6px] flex h-36 w-full items-center rounded-[16px] bg-[#FFF6E8] px-6 gap-8 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] overflow-x-auto">
           
           <div class="flex items-center justify-around w-full">
@@ -76,6 +76,13 @@
         <pre class="phone_number font-normal text-base w-full leading-6 text-neutral-900 line-clamp-3 text-left">
         
         </pre>
+      </div>
+
+      <div dir="rtl" class="flex flex-col h-full w-full items-start justify-between gap-2 rounded-[16px] bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] mt-6 p-4 px-5">
+        <h3 class="font-bold text-sm">
+          ما اینجایم
+        </h3>
+        <iframe src="leaflet/main.html" frameborder="0" class="w-full h-full"></iframe>
       </div>
 
       <!-- working hour -->

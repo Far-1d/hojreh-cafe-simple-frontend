@@ -2,11 +2,15 @@ function goToMenu(){
     window.location.href = "./menu.html"
 }
 
+function goToSearch(){
+    window.location.href = "./menu.html?search=true"
+}
+
 function goToHome(){
     window.location.href = "./main.html"
 }
 
-async function fetchAndStoreData(method, url, key, headers, json_data) {
+async function fetchAndStoreData(method, url, key, headers, json_data, expiry=60*5) {
     try {
 
         const options = {
@@ -18,7 +22,7 @@ async function fetchAndStoreData(method, url, key, headers, json_data) {
         
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            setWithExpiry('error', errorData, 60*5); // 5min expiry
+            setWithExpiry('error', errorData, expiry);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -62,6 +66,28 @@ function convertToPersianPrice(number) {
     return persianPrice;
 }
 
+
+function convertToPersianNumber(text) {    
+    // Mapping Arabic numerals to Persian numerals
+    const persianNumerals = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    
+    // Convert each digit to its Persian equivalent
+    let persian = '';
+    for (let char of text) {
+        if (/\d/.test(char)) { // Check if the character is a digit
+            persian += persianNumerals[parseInt(char)];
+        } else {
+            persian += char; // Keep commas or other characters
+        }
+    }
+
+    return persian;
+}
+
+
+function formatTime(time){
+    return time.slice(0, 5);
+}
 
 function fillLogo(){
     if (getWithExpiry('restaurant')){

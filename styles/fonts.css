@@ -1,0 +1,16 @@
+/* adding Badr font */
+
+@font-face {
+    font-family: 'Badr';
+    src: url('../fonts/B-Badr_0.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Badr';
+    src: url('../fonts/B-Badr-Bold_0.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  

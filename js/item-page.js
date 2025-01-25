@@ -35,14 +35,19 @@ function fillPage(cart){
       const element = createItemOptionElement(option, item, cart, true);
       optionDiv.appendChild(element);
   })
+  const select_button = document.getElementsByClassName('item-select')[0];
 
-    const select_button = document.getElementsByClassName('item-select')[0];
-
-    select_button.textContent =cart.itemQty(item)>0 ? `انتخاب شد (${cart.itemQty(item)})` :'انتخاب'
+  if ((item.options.length && item.own_price_visible) || !item.options.length){  
+    select_button.textContent =cart.itemQty(item)>0 ? `انتخاب شد (${convertToPersianPrice(cart.itemQty(item))})` :'انتخاب'
     select_button.addEventListener('click', ()=>{
         cart.addItem(item, 'item');
-        select_button.textContent = `انتخاب شد (${cart.itemQty(item)})`
+        select_button.textContent = `انتخاب شد (${convertToPersianPrice(cart.itemQty(item))})`
     })
+  } else {
+    select_button.style.display = "none";
+    const returnBtn = document.getElementsByClassName('return-button')[0];
+    returnBtn.className = "col-span-3 bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] text-[#241E17] text-lg py-3";
+  }
 }
 
 

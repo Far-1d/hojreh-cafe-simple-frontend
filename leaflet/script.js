@@ -1,11 +1,14 @@
 // Initialize the map with a default center and zoom level
-var map = L.map('map').setView([35.6892, 51.3890], 9); // Default to London coordinates
+var map = L.map('map').setView([32.6584566, 51.6564164], 14.8); // Default to London coordinates
 
 // Add the tile layer to the map (you can choose another provider or style)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 20,
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
+
+// Add a marker at the specified location
+var defaultMarker = L.marker([32.658400, 51.655387]).addTo(map);
 
 // Function to handle marker placement and display coordinates
 function onMapClick(e) {

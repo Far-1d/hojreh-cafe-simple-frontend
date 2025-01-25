@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         fillAddresses(order);
         createTime(order);
-        loadPrice();
+        // loadPrice();
         connectActionButtons(order);
     } catch (error) {
         showError('مشکل در اتصال به سرور');  
@@ -43,7 +43,7 @@ function fillAddresses(order){
     const addresses = getWithExpiry('addresses');
     if(addresses.length){
         addresses.forEach((address, idx) => {
-            const div = createAddress(address, order);
+            const div = createAddress(address, order, idx);
             list.appendChild(div);
         });
     }
@@ -51,7 +51,7 @@ function fillAddresses(order){
 
 }
 
-function createAddress(address, order){
+function createAddress(address, order, idx){
     const mainDiv = document.createElement('div');
     const innerDiv = document.createElement('div');
     const p_tag = document.createElement('p');
@@ -95,9 +95,14 @@ function createAddress(address, order){
         order.updateAddress(address.id);        
     })
 
+    if (idx == 0){
+        mainDiv.click();
+    }
+
     if (order.address == address.id){
         mainDiv.classList.add('selected');
     }
+
     return mainDiv;
 }
 
@@ -136,7 +141,7 @@ function createTimeElement(time, order){
     button.className = "time w-full h-12 rounded-[16px] bg-[#FFF6E8] text- text-[#241E17] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]";
     button.textContent = time.name;
     button.dataset.uuid = time.id;
-    tippy(button, {content:`${time.time}<br>${time.description}`});
+    tippy(button, {content:`${time.description}`});
     
     button.addEventListener('click', function (){
         const listDiv = document.getElementsByClassName('deliver-time')[0];

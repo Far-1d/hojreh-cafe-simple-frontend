@@ -1,5 +1,13 @@
+let isSearching = ''
+
 document.addEventListener('DOMContentLoaded', ()=>{
-    
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    isSearching = urlParams.get('search');
+
+    if (isSearching == "true"){
+        showSearch();
+    }
 })
 
 
@@ -27,6 +35,15 @@ function showSearch(){
             </button>
         </div>
     `;
+    const input = document.getElementById('item');
+    const searchButton = document.getElementById('searchBtn');
+
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default behavior
+            searchItems();
+        }
+    });
 }
 
 async function searchItems(){
@@ -84,6 +101,9 @@ function exitSearch(){
 
     const cart = new Cart();
     fillItems(cart);
+    if (isSearching == "true"){
+        fillCategory();
+    }
 }
 
 
