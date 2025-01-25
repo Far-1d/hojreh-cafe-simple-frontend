@@ -53,7 +53,7 @@ function createBestSellerItem(item){
     img.className = "h-20 w-20 rounded-[16px]";
     p.className = "w-full text-base font-bold";
 
-    p.textContent = item.name
+    p.textContent = convertToPersianNumber(item.name)
     img.src = changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image)
     img.alt = `${item.name} image`;
     img.loading = "lazy";

@@ -204,7 +204,9 @@ function connectActionButtons(order){
                         }
                     } else {
                         console.log(getWithExpiry('error'));
-                        forwardBtn.textContent = "پرداخت";
+                        setTimeout(() => {
+                            forwardBtn.textContent = "پرداخت";
+                        }, 10000);
                         showError('مشکل در اتصال به سرور');
                         return;
                     }
@@ -221,12 +223,13 @@ function connectActionButtons(order){
         } else {
             showError('مشکلی پیش آمد لطفا مجدد اقدام کنید');
         }
-
-        if (checkBox.checked){
-            forwardBtn.textContent = "تکمیل";
-        } else {
-            forwardBtn.textContent = "پرداخت";
-        }
+        setTimeout(() => {
+            if (checkBox.checked){
+                forwardBtn.textContent = "تکمیل";
+            } else {
+                forwardBtn.textContent = "پرداخت";
+            }
+        }, 10000);
     });
 }
 

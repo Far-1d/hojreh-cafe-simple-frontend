@@ -19,54 +19,58 @@
     <script src="js/dialog.js"></script>
     <script src="js/search.js"></script>
   </head>
-  <body class="relative min-h-screen w-full bg-[#fff9f0] overflow-x-hidden" style="font-family: 'Vazirmatn', sans-serif;">
+  <body class="relative h-screen w-full bg-[#fff9f0] overflow-x-hidden" style="font-family: 'Vazirmatn', sans-serif;">
     <div class="w-full h-full bg-[#fff9f0] flex items-center justify-center">
-    <div class="w-full h-full bg-[#fff9f0] max-w-[520px] p-6 px-10 relative">
-      <!-- navbar -->
-      <div id="nav-container" class="flex w-full">
-        <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
-          <button class="flex w-10 items-center justify-center" onclick=showSearch()>
-            <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
-          </button>
+    <div class="relative w-full h-full bg-[#fff9f0] max-w-[520px] px-10">
 
-          <button class="flex w-16 items-center justify-center overflow-visible" onclick=goToHome()>
-            <img src="/images/logo.png" alt="logo" class="w-[95px] logo" loading="eager" decoding="async"/>
-          </button>
+      <!-- nav and category absolute container -->
+      <div class="absolute top-6 left-0 w-[96vw] max-w-[520px] translate-x-[-50%] bg-[#fff9f0] px-10">
+        <!-- navbar -->
+        <div id="nav-container" class="flex w-full">
+          <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+            <button class="flex w-10 items-center justify-center" onclick=showSearch()>
+              <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
+            </button>
 
-          <button class="menu-btn flex w-10 items-center justify-center" onclick=toggleMenu()>
-            <div class="h-8 w-8">
-              <img src="/images/menu.svg" alt="menu" class="h-8 w-8" loading="eager" decoding="async"/>
+            <button class="flex w-16 items-center justify-center overflow-visible" onclick=goToHome()>
+              <img src="/images/logo.png" alt="logo" class="w-[95px] logo" loading="eager" decoding="async"/>
+            </button>
+
+            <button class="menu-btn flex w-10 items-center justify-center" onclick=toggleMenu()>
+              <div class="h-8 w-8">
+                <img src="/images/menu.svg" alt="menu" class="h-8 w-8" loading="eager" decoding="async"/>
+              </div>
+            </button>
+          </nav>
+        </div>
+
+        <!-- category list -->
+        <div id="category-list" class="mt-6 h-12 w-full overflow-x-hidden overflow-y-hidden p-[1px] px-4" dir="rtl">
+          <div class="category_list flex h-12 w-full mx-3 items-start overflow-y-hidden overflow-x-auto">
+            <!-- filled with category buttons -->
+
+            <div class="sk-loading">
+              <h4 class="sk-category"></h4>
             </div>
-          </button>
-        </nav>
-      </div>
+            
+            <div class="sk-loading">
+              <h4 class="sk-category"></h4>
+            </div>
 
-      <!-- category list -->
-      <div id="category-list" class="mt-6 h-12 w-full p-[1px]" dir="rtl">
-        <div class="category_list flex h-12 w-full mx-3 items-start overflow-y-hidden overflow-x-auto">
-          <!-- filled with category buttons -->
+            <div class="sk-loading">
+              <h4 class="sk-category"></h4>
+            </div>
 
-          <div class="sk-loading">
-            <h4 class="sk-category"></h4>
+            <div class="sk-loading">
+              <h4 class="sk-category"></h4>
+            </div>
+            
           </div>
-          
-          <div class="sk-loading">
-            <h4 class="sk-category"></h4>
-          </div>
-
-          <div class="sk-loading">
-            <h4 class="sk-category"></h4>
-          </div>
-
-          <div class="sk-loading">
-            <h4 class="sk-category"></h4>
-          </div>
-          
         </div>
       </div>
 
       <!-- this should be fit to screen -->
-      <div class="overflow-y-hidden flex flex-col h-full">
+      <div class="flex h-screen flex-col overflow-y-hidden pt-[112px] pb-2">
         <div class="item_list flex flex-col items-center justify-start w-full h-screen px-3 pb-1 overflow-y-auto">
           <!-- filled with item div content -->
 
@@ -130,7 +134,7 @@
       </div>
 
       <!-- complete order btn -->
-      <div class="cart-button cursor-pointer sticky bottom-10 left-[30px] flex h-14 w-40 items-center justify-center gap-2 rounded-[16px] bg-[#018FCC] text-white" dir="rtl">
+      <div class="cart-button cursor-pointer absolute bottom-10 left-[30px] flex h-14 w-40 items-center justify-center gap-2 rounded-[16px] bg-[#018FCC] text-white" dir="rtl">
         <span class="text-xl hover:font-bold">سبد خرید</span>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M2.58683 10H21.4132M18.0351 6L5.96486 6C3.45403 6 1.57594 8.32624 2.08312 10.808L3.71804 18.808C4.09787 20.6666 5.71942 22 7.59978 22H16.4002C18.2806 22 19.9021 20.6666 20.282 18.808L21.9169 10.808C22.4241 8.32624 20.546 6 18.0351 6Z" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

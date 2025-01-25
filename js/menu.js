@@ -5,113 +5,102 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = "main.html"
         return;
     }
+    // activate cart button
+    cartButton();
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const isSearching = urlParams.get('search');
-
-    if (isSearching != "true"){
-        const cart = new Cart(); // Create an instance of Cart
+    const cart = new Cart(); // Create an instance of Cart
     
-        // get menus
-        const branch = getWithExpiry('branch')[0];
-        const branch_id = branch.id;
-        
-        try{
-            if (! getWithExpiry('menu')){
-                await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*60*24);
-            }
-            
-            if (! getWithExpiry('category')){
-                // get categories
-                const menu = getWithExpiry('menu')[0];
-                const menu_id = menu.id;
-                await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {});
-            }
-            
-            if (! getWithExpiry('items')){
-                // get items for each category , concatenate them, store 'em
-                const categories = getWithExpiry('category');
-                let items = [];
+    // get branch
+    const branch = getWithExpiry('branch')[0];
+    const branch_id = branch.id;
     
-                // Use Promise.all to wait for all fetch requests
-                const itemFetchPromises = categories.map(async (category) => {
-                    const category_id = category.id;
-                    await fetchAndStoreData('GET', `${base_url}/api/menu/item/list/${category_id}`, 'cat_items', {});
-                    const catItems = getWithExpiry('cat_items') || [];
-                    return catItems; // Return items for this category
-                });
-    
-                // Wait for all item fetches to complete
-                const fetchedItemsArrays = await Promise.all(itemFetchPromises);
-                
-                // Flatten the array of arrays into a single array
-                fetchedItemsArrays.forEach(catItems => {
-                    items = items.concat(catItems);
-                });
-                
-                setWithExpiry("items", items, 10*60);
-            }
-            fillCategory();
-            fillItems(cart);
-        } catch (error) {
-            // console.error("Error fetching data:", error);
-        }
-        connect_scroll_functionality();
-    } else {
-        // fill items
-        const categoryContainer = document.getElementById('category-list');
-        categoryContainer.style.display = 'none';
-
+    const categoryContainer = document.getElementById('category-list');
+    if (isSearching == "true"){
         // clear skeleton
         const itemsDiv = document.getElementsByClassName('item_list')[0];
         itemsDiv.innerHTML = "<p class='mt-10 text-[#241E17]'>متن جستجو را وارد کنید</p>";
-
-        try {
-            // get menus
-            const branch = getWithExpiry('branch')[0];
-            const branch_id = branch.id;
-            if (! getWithExpiry('menu')){
-                await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*60*24);
-            }
-
-            if (! getWithExpiry('category')){
-                // get categories
-                const menu = getWithExpiry('menu')[0];
-                const menu_id = menu.id;
-                await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {});
-            }
-            
-            if (! getWithExpiry('items')){
-                // get items for each category , concatenate them, store 'em
-                const categories = getWithExpiry('category');
-                let items = [];
-    
-                // Use Promise.all to wait for all fetch requests
-                const itemFetchPromises = categories.map(async (category) => {
-                    const category_id = category.id;
-                    await fetchAndStoreData('GET', `${base_url}/api/menu/item/list/${category_id}`, 'cat_items', {});
-                    const catItems = getWithExpiry('cat_items') || [];
-                    return catItems; // Return items for this category
-                });
-    
-                // Wait for all item fetches to complete
-                const fetchedItemsArrays = await Promise.all(itemFetchPromises);
-                
-                // Flatten the array of arrays into a single array
-                fetchedItemsArrays.forEach(catItems => {
-                    items = items.concat(catItems);
-                });
-    
-                setWithExpiry("items", items, 10*60);
-            }
-
-        } catch (error) {
-            // console.log(error)
-        }
     }
-    cartButton();
+    try{
+        // get menus
+        if (! getWithExpiry('menu')){
+            await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*60*24);
+        }
+        
+        if (! getWithExpiry('category')){
+            // get categories
+            const menu = getWithExpiry('menu')[0];
+            const menu_id = menu.id;
+            await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {}, null, 60*60*24);
+        }
+        
+        if (! getWithExpiry('items')){
+            // get items for each category , concatenate them, store 'em
+            const categories = getWithExpiry('category');
+            let items = [];
+
+            // Use Promise.all to wait for all fetch requests
+            const itemFetchPromises = categories.map(async (category) => {
+                const category_id = category.id;
+                await fetchAndStoreData('GET', `${base_url}/api/menu/item/list/${category_id}`, 'cat_items', {});
+                const catItems = getWithExpiry('cat_items') || [];
+                return catItems; // Return items for this category
+            });
+
+            // Wait for all item fetches to complete
+            const fetchedItemsArrays = await Promise.all(itemFetchPromises);
+            
+            // Flatten the array of arrays into a single array
+            fetchedItemsArrays.forEach(catItems => {
+                items = items.concat(catItems);
+            });
+            
+            setWithExpiry("items", items, 60*60*24);
+        }
+        fillCategory();
+        if (isSearching != "true"){
+            fillItems(cart);
+        } else {
+            categoryContainer.style.display = 'none';
+        }
+    } catch (error) {
+        // console.error("Error fetching data:", error);
+    }
+    
+    runImageLoading();
 });
+
+
+const placeholderImage = 'images/default_pic.png';
+
+function runImageLoading(){
+    const lazyImages = document.querySelectorAll('img[data-src]');
+
+    const loadImage = (img) => {
+        if (img.getAttribute('data-src')){
+            img.src = img.getAttribute('data-src');
+            img.removeAttribute('data-src'); // Remove data-src after loading
+        }
+    };
+
+    const onScroll = () => {
+        lazyImages.forEach(img => {
+            const rect = img.getBoundingClientRect();
+            if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+                loadImage(img);
+            }
+        });
+    };
+
+    // Initial check in case images are already in view
+    onScroll();
+
+    // Add scroll event listener
+    const itemsDiv = document.getElementsByClassName('item_list')[0];
+    itemsDiv.addEventListener('scroll', onScroll);
+}
 
 
 function fillCategory(){
@@ -174,10 +163,10 @@ function fillItems(cart, isFromSearch=false){
         resultDiv.dir = 'rtl';
         resultDiv.textContent = 'نتایج';
         itemsDiv.appendChild(resultDiv);
-
+        
         const items = getWithExpiry('searchedItems');
         items.forEach((item,idx) =>{
-            const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_item.webp'
+            const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_pic.png'
             const itemDiv = createItemElement(item, imgLink, cart);
             itemsDiv.appendChild(itemDiv);
         })
@@ -187,7 +176,11 @@ function fillItems(cart, isFromSearch=false){
             itemsDiv.appendChild(p);
         }
     }
-
+    setTimeout(() => {
+        connect_scroll_functionality();
+        runImageLoading();
+    }, 500);
+    
 }
 
 // create a categoty element for item list
@@ -195,7 +188,7 @@ function createCategoryHeader(name, idx){
     const div = document.createElement('div');
     div.className = "mt-10 mb-6 flex w-full items-center justify-end item-section";
     div.id = `section-${idx}`
-
+    
     const span = document.createElement('span');
     span.className = "text-xl font-bold text-[#665541]";
     span.textContent = name;
@@ -229,9 +222,11 @@ function createItemElement(item, image, cart){
     img_inner_div.className = "col-span-3 w-full";
 
     const img_tag = document.createElement('img');
-    img_tag.className = "max-h-40 rounded-[16px]"
+    img_tag.className = "max-h-40 rounded-[16px] w-full h-auto"
     img_tag.alt = item.name;
-    img_tag.src = image;
+    img_tag.setAttribute('data-src', image)
+    img_tag.src = placeholderImage;
+    // img_tag.src = image;
     img_tag.loading = "lazy";
     img_tag.decoding = "async";
 

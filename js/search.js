@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
 
-
 function showSearch(){
     const container = document.getElementById('nav-container');
     container.innerHTML = '';

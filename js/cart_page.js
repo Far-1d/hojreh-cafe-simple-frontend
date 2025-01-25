@@ -103,18 +103,19 @@ function createItemElement(item, image, cart){
     // row 2
     const row2_div1 = document.createElement('div');
     row2_div1.className = "mt-3 flex w-full items-center justify-between";
+    
+    if ((item.options.length && item.own_price_visible) || !item.options.length){
+        const price_span = document.createElement('span');
+        price_span.className = "text-xl font-bold text-[#665541]";
+        price_span.textContent = convertToPersianPrice(item.price);
 
-    const price_span = document.createElement('span');
-    price_span.className = "text-xl font-bold text-[#665541]";
-    price_span.textContent = convertToPersianPrice(item.price);
+        const row2_div2 = document.createElement('div');
+        const cart_button = itemCartButton(item, cart)
 
-    const row2_div2 = document.createElement('div');
-    const cart_button = itemCartButton(item, cart)
-
-    row2_div2.appendChild(cart_button);
-    row2_div1.appendChild(row2_div2);
-    row2_div1.appendChild(price_span);
-
+        row2_div2.appendChild(cart_button);
+        row2_div1.appendChild(row2_div2);
+        row2_div1.appendChild(price_span);
+    }
     
     mainDiv.appendChild(img_div);
     mainDiv.appendChild(row2_div1);

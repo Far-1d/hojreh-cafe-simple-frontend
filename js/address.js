@@ -19,9 +19,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 function connectActionButtons(address, customer){
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const returnUrl = urlParams.get('return');
+
     const return_btn = document.getElementsByClassName('return-button')[0];
     return_btn.addEventListener('click', ()=>{
-        window.location.href = "send.html";
+        if (returnUrl == "profile"){
+            window.location.href = "profile.html";
+        } else if (returnUrl == "send"){
+            window.location.href = "send.html";
+        }
         return;
     })
 
@@ -45,10 +53,7 @@ function connectActionButtons(address, customer){
         const headers = {
             'authorization': `bearer ${customer.id}`
         }
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const returnUrl = urlParams.get('return');
-        console.log(returnUrl);
+        
         if(address){
             const response = await fetchAndStoreData('PUT', `${base_url}/api/customer/address/update/${address.id}`, '', headers, form);
             if (response){

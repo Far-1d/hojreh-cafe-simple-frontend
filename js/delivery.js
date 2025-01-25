@@ -57,7 +57,9 @@ function connectActionButton(cart){
                         window.location.href = `${base_url}/api/payment/pay/zarinpal?payment=${newResponse.payment}&return=${returnUrl}`
                     }
                 } else {
-                    forwardBtn.textContent = "پرداخت";
+                    setTimeout(() => {
+                        button.textContent = "پرداخت";
+                    }, 5000);
                     showError('مشکل در اتصال به سرور');
                     return;
                 }
@@ -81,7 +83,9 @@ function connectActionButton(cart){
 function toggleButton(buttonId) {
     var button1 = document.getElementById('takeout');
     var button2 = document.getElementById('dine-in');
-    
+    const ActionButton = document.getElementsByClassName('action-button')[0];
+
+
     const order = Order.loadFromLocalStorage() || new Order();
     order.updateDeliveryType('')
         if (buttonId === 'button1') {
@@ -91,6 +95,7 @@ function toggleButton(buttonId) {
         if (button1.classList.contains('selected')) {
             button2.classList.remove('selected');
             order.updateDeliveryType('takeout');
+            ActionButton.textContent = "تایید";
         }
     } else if (buttonId === 'button2') {
         // Toggle Button 2
@@ -99,6 +104,7 @@ function toggleButton(buttonId) {
         if (button2.classList.contains('selected')) {
             button1.classList.remove('selected');
             order.updateDeliveryType('dine-in')
+            ActionButton.textContent = "پرداخت";
         }
     }
 }

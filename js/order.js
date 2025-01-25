@@ -50,7 +50,7 @@ class Order {
 
     saveToLocalStorage() {
         const orderDetails = this.getOrderDetails();
-        const expiryTime = Date.now() + 30 * 60 * 1000; // 30 minutes from now
+        const expiryTime = Date.now() + 30 * 60 * 1000; // 4 minutes from now
         const dataToStore = {
             orderDetails,
             expiry: expiryTime
