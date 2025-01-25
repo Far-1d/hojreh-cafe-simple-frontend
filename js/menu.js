@@ -250,12 +250,12 @@ function createItemElement(item, image, cart){
 
     // single word
     const sw_span = document.createElement('span');
-    sw_span.className = "line-clamp-2 text-sm font-normal text-[#665541]";
+    sw_span.className = "line-clamp-2 text-sm- font-normal text-[#665541]";
     sw_span.textContent = single_words[item.single_word];
 
 
     const desc_span = document.createElement('span');
-    desc_span.className = "line-clamp-2 text-sm font-normal text-[#665541]";
+    desc_span.className = "line-clamp-2 text-sm- font-normal text-[#665541]";
     desc_span.textContent = item.description;
 
     redirect_button.appendChild(h3_name);
@@ -317,8 +317,8 @@ function createItemOptionElement(option, item, cart, is_last){
     const nameDiv = document.createElement('div');
     nameDiv.innerHTML = `<div class="flex w-full flex-col items-start space-y-2 text-base font-bold text-[#241E17]">
                             <h3>${option.name}</h3>
-                            <span class="text-sm font-bold">${convertToPersianPrice(option.price)}</span>
-                            <span class="text-sm font-normal h-4 line-clamp-1">${option.desription || ''}</span>
+                            <span class="text-lg font-bold">${convertToPersianPrice(option.price)}</span>
+                            <span class="text-sm- font-normal h-4 line-clamp-1">${option.desription || ''}</span>
                         </div>`
     const btnDiv = document.createElement('div');
     btnDiv.className='flex h-full w-full items-center justify-end'

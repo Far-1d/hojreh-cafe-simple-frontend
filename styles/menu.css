@@ -895,3 +895,17 @@
   inherits: false;
   initial-value: 0 0 #0000;
 }
+
+
+.active-cat {
+  background-color: #FFA842;
+  color: white;
+};
+
+.active-span {
+  color: white;
+};
+
+.active-img {
+  fill: white;
+}
