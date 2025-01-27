@@ -97,17 +97,6 @@ function fillLogo(){
     }
 }
 
-const single_words = {
-    'greasy': 'چرب',
-    'vegan': 'گیاهی',
-    'dietary': 'رژیمی',
-    'spicy': 'تند',
-    'local': 'محلی',
-    'raw': 'خام',
-}
-
-
-
 function setWithExpiry(key, value, ttl) { // ttl is in seconds
     const now = new Date();
     const item = {
@@ -139,7 +128,6 @@ function getWithExpiry(key) {
 }
 
 
-
 function toggleMenu() {
     const menu = document.getElementById('sideMenu');
     menu.classList.toggle('openMenu'); // Toggle the 'open' class
@@ -155,6 +143,7 @@ function toggleClose() {
     const closeMenuBtn = document.getElementById('closeMenu');
     closeMenuBtn.classList.toggle('openClose'); // Toggle the 'open' class
 }
+
 document.addEventListener('DOMContentLoaded', ()=>{
     const button = document.querySelector('#sideMenu button');
     

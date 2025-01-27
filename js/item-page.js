@@ -25,7 +25,7 @@ function fillPage(cart){
     h3_name.textContent = item.name;
 
     const sw_span = document.getElementsByClassName('single_word')[0];
-    sw_span.textContent = single_words[item.single_word];
+    sw_span.textContent = item.single_word;
 
     const p_description = document.getElementsByClassName('item-description')[0];
     p_description.textContent = item.description;

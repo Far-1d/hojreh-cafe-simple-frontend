@@ -227,8 +227,8 @@ function createItemElement(item, image, cart){
     img_tag.setAttribute('data-src', image)
     img_tag.src = placeholderImage;
     // img_tag.src = image;
-    img_tag.loading = "lazy";
-    img_tag.decoding = "async";
+    // img_tag.loading = "lazy";
+    // img_tag.decoding = "async";
 
     img_inner_div.appendChild(img_tag)
     img_div.appendChild(img_inner_div)
@@ -251,7 +251,7 @@ function createItemElement(item, image, cart){
     // single word
     const sw_span = document.createElement('span');
     sw_span.className = "line-clamp-2 text-sm- font-normal text-[#665541]";
-    sw_span.textContent = single_words[item.single_word];
+    sw_span.textContent = item.single_word;
 
 
     const desc_span = document.createElement('span');
