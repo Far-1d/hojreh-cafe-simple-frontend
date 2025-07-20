@@ -36,7 +36,7 @@ function fillProfile(){
     const name = document.getElementById('name-value');
     const phone = document.getElementById('phone-value');
     name.textContent = profile.name;
-    phone.textContent = profile.phone_number;
+    phone.textContent = convertToPersianNumber(profile.phone_number);
 }
 
 

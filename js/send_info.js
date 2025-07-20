@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const customer = getWithExpiry('customer');
     const restaurant = getWithExpiry('restaurant');
+    const branch = getWithExpiry('branch');
     
     if (! restaurant){
         window.location.href = "main.html";
@@ -22,8 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         await fetchAndStoreData('GET', `${base_url}/api/customer/address/list`, 'addresses', headers);
         
-        const restaurant_id = restaurant.id;
-        await fetchAndStoreData('GET', `${base_url}/api/order/deliver/list?restaurant=${restaurant_id}`, 'deliverTimes', {});
+        const branch_id = branch[0].id;
+        await fetchAndStoreData('GET', `${base_url}/api/order/deliver/list?branch=${branch_id}`, 'deliverTimes', {});
         
         fillAddresses(order);
         createTime(order);
@@ -33,8 +34,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         showError('مشکل در اتصال به سرور');  
     }
 
-    var checkBox = document.getElementById("PayAtHome");
-    checkBox.addEventListener('click', togglePayment);
+    // var checkBox = document.getElementById("PayAtHome");
+    // checkBox.addEventListener('click', ()=>{togglePayment(order)});
 
 });
 
@@ -176,44 +177,44 @@ function connectActionButtons(order){
         forwardBtn.textContent = "درحال پردازش";
         const cart = new Cart();
         const customer = getWithExpiry('customer');
-        var checkBox = document.getElementById("PayAtHome");
+        // var checkBox = document.getElementById("PayAtHome");
 
         if (order.isComplete() && cart.items.length ){
             const body = order.createBody(cart)
             const headers = {
                 'authorization': `bearer ${customer.id}`,
             }
-            if (checkBox.checked){
+            // if (checkBox.checked){
+            //     const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
+            //     console.log(response);
+            //     if (response.id){
+            //         window.location.href = "status.html?status=OK";
+            //     } else {
+            //         showError('خطایی رخ داد، لطفا لحظاتی دیگر مجدد امتحان کنید');
+            //     }
+            // } else {
+            try {
                 const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
-                console.log(response);
                 if (response.id){
-                    window.location.href = "status.html?status=OK";
-                } else {
-                    showError('خطایی رخ داد، لطفا لحظاتی دیگر مجدد امتحان کنید');
-                }
-            } else {
-                try {
-                    const response = await fetchAndStoreData('POST', `${base_url}/api/order/create`, 'orderCreated', headers, body);
-                    if (response.id){
-                        const form = new FormData();
-                        form.append('order', response.id);
-                        const newResponse = await fetchAndStoreData('POST', `${base_url}/api/payment/new?gateway=zarinpal`, 'payment', headers, form);
-                        if (newResponse.payment){
-                            const returnUrl = `${front_url}/status.html`;
-                            window.location.href = `${base_url}/api/payment/pay/zarinpal?payment=${newResponse.payment}&return=${returnUrl}`
-                        }
-                    } else {
-                        console.log(getWithExpiry('error'));
-                        setTimeout(() => {
-                            forwardBtn.textContent = "پرداخت";
-                        }, 10000);
-                        showError('مشکل در اتصال به سرور');
-                        return;
+                    const form = new FormData();
+                    form.append('order', response.id);
+                    const newResponse = await fetchAndStoreData('POST', `${base_url}/api/payment/new?gateway=zarinpal`, 'payment', headers, form);
+                    if (newResponse.payment){
+                        const returnUrl = `${front_url}/status.html`;
+                        window.location.href = `${base_url}/api/payment/pay/zarinpal?payment=${newResponse.payment}&return=${returnUrl}`
                     }
-                } catch (error) {
-                    showError('خطا اجرای برنامه')
+                } else {
+                    console.log(getWithExpiry('error'));
+                    setTimeout(() => {
+                        forwardBtn.textContent = "پرداخت";
+                    }, 10000);
+                    showError('مشکل در اتصال به سرور');
+                    return;
                 }
+            } catch (error) {
+                showError('خطا اجرای برنامه')
             }
+            // }
         } else if (!order.isComplete() && !cart.items.length){
             showError('سبد خرید خالی است - اطلاعات سفارش ناقض است');
         }else if (!order.isComplete()){
@@ -224,11 +225,11 @@ function connectActionButtons(order){
             showError('مشکلی پیش آمد لطفا مجدد اقدام کنید');
         }
         setTimeout(() => {
-            if (checkBox.checked){
-                forwardBtn.textContent = "تکمیل";
-            } else {
-                forwardBtn.textContent = "پرداخت";
-            }
+            // if (checkBox.checked){
+            //     forwardBtn.textContent = "تکمیل";
+            // } else {
+            forwardBtn.textContent = "پرداخت";
+            // }
         }, 10000);
     });
 }
@@ -264,10 +265,15 @@ function loadPrice(){
 
 }
 
-const togglePayment = ()=>{
-    const forwardBtn = document.getElementsByClassName('forward-button')[0];
-    var checkBox = document.getElementById("PayAtHome");
+// const togglePayment = (order)=>{
+//     const forwardBtn = document.getElementsByClassName('forward-button')[0];
+//     var checkBox = document.getElementById("PayAtHome");
 
-    if (checkBox.checked) forwardBtn.textContent = "تکمیل";
-    else forwardBtn.textContent = "پرداخت"
-}
+//     if (checkBox.checked) {
+//         order.updateDeliveryType('takeoutN');
+//         forwardBtn.textContent = "تکمیل";
+//     } else {
+//         order.updateDeliveryType('takeoutP');
+//         forwardBtn.textContent = "پرداخت"
+//     }
+// }

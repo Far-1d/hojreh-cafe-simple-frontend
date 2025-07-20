@@ -30,24 +30,46 @@ function fillPage(cart){
     const p_description = document.getElementsByClassName('item-description')[0];
     p_description.textContent = item.description;
     
+    if (item.show_inventory){
+      const inventory = document.getElementsByClassName('inventory')[0];
+      inventory.textContent = item.inventory == 0 ? "اتمام موجودی": item.inventory;
+      if (item.inventory == 0) {
+          inventory.style.color ="#eb2762";
+      }
+    } else {
+      const inventory_container = document.getElementsByClassName('inventory-container')[0];
+      inventory_container.style.display = "none";
+    }
+
     const optionDiv = document.getElementsByClassName('option-list')[0];
     item.options.forEach((option, idx) =>{
       const element = createItemOptionElement(option, item, cart, true);
       optionDiv.appendChild(element);
-  })
-  const select_button = document.getElementsByClassName('item-select')[0];
-
-  if ((item.options.length && item.own_price_visible) || !item.options.length){  
-    select_button.textContent =cart.itemQty(item)>0 ? `انتخاب شد (${convertToPersianPrice(cart.itemQty(item))})` :'انتخاب'
-    select_button.addEventListener('click', ()=>{
-        cart.addItem(item, 'item');
-        select_button.textContent = `انتخاب شد (${convertToPersianPrice(cart.itemQty(item))})`
     })
-  } else {
-    select_button.style.display = "none";
-    const returnBtn = document.getElementsByClassName('return-button')[0];
-    returnBtn.className = "col-span-3 bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] text-[#241E17] text-lg py-3";
-  }
+    
+    const select_button = document.getElementsByClassName('item-select')[0];
+    
+    if (item.show_inventory && item.inventory == 0){
+      select_button.disabled = true;
+    }
+
+    if ((item.options.length && item.own_price_visible) || !item.options.length){  
+      select_button.textContent =cart.itemQty(item)>0 ? `انتخاب شد (${convertToPersianPrice(cart.itemQty(item))})` :'انتخاب'
+      select_button.addEventListener('click', ()=>{
+          if (item.show_inventory){
+            if (item.inventory <= cart.itemQty(item)){
+                return showModal('انتخاب بیش از حد مجاز نیست', 5000);
+            }
+          }
+          
+          cart.addItem(item, 'item');
+          select_button.textContent = `انتخاب شد (${convertToPersianPrice(cart.itemQty(item))})`
+      })
+    } else {
+      select_button.style.display = "none";
+      const returnBtn = document.getElementsByClassName('return-button')[0];
+      returnBtn.className = "col-span-3 bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] text-[#241E17] text-lg py-3";
+    }
 }
 
 
@@ -83,7 +105,7 @@ function itemCartButton(item, cart, option=null) {
       if (!cart.isInCart(item, option)) {
           // Create "Add to Cart" button
           const button = document.createElement('button');
-          button.className = "flex h-8 w-14 items-center justify-center rounded-[12px] bg-[#018FCC]";
+          button.className = "flex h-8 w-14 items-center justify-center rounded-[12px] bg-[#018FCC] disabled:bg-[#a5cddf] disabled:text-[#696969]";
           button.innerHTML = `
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 13V19" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -94,6 +116,11 @@ function itemCartButton(item, cart, option=null) {
                   <path d="M14.9998 2L17.9998 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" />
               </svg>
           `;
+
+          if (item.inventory == 0){
+            button.disabled = true;
+          }
+
           button.addEventListener('click', () => {
               const type = option==null?'item':'option';
               cart.addItem(item, type, option);
@@ -118,6 +145,17 @@ function itemCartButton(item, cart, option=null) {
           const type = option==null?'item':'option';
 
           plus.addEventListener('click', () => {
+              if (option==null){
+                  if (item.inventory <= cart.itemQty(item)){
+                      return showModal('انتخاب بیش از حد مجاز نیست', 5000);
+                  }
+              }
+              else {
+                  if (item.inventory <= cart.optionQty(item, option)){
+                      return showModal('انتخاب بیش از حد مجاز نیست', 5000);
+                  }
+              }
+
               cart.addItem(item, type, option);
               qtySpan.textContent = convertToPersianPrice(option==null? cart.itemQty(item): cart.optionQty(item, option)); // Update quantity display
           });
@@ -150,14 +188,20 @@ function itemCartButton(item, cart, option=null) {
   return buttonContainer; // Return the container with the appropriate button(s)
 }
 
+const placeholderImage = 'images/default_pic.png';
 
 function createCarousel(item){
     let photos = [];
     const carousel = document.getElementsByClassName('carousel')[0];
-    item.images.forEach(image =>{
+    if (item.images && item.images.length > 0){
+      item.images.forEach(image =>{
         let source = `${base_url}${image.image}`;
         photos.push(source);
-    })
+      })
+    }
+    else {
+      photos.push(placeholderImage);
+    }
     carouselFunctions(photos);
 }
 
@@ -198,4 +242,24 @@ function carouselFunctions(photos) {
       });
     });
   }
+}
+
+
+function showModal(message, autoCloseTime = 3000) {
+  const modal = document.getElementById('modal');
+  const modalMessage = document.getElementById('modalMessage');
+  const closeBtn = document.getElementById('closeBtn');
+
+  modalMessage.textContent = message;
+  modal.style.display = 'flex'; // Show modal
+
+  function closeModal() {
+    modal.style.display = 'none'; // Hide modal
+    closeBtn.removeEventListener('click', closeModal);
+    clearTimeout(autoCloseTimeout);
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+
+  const autoCloseTimeout = setTimeout(closeModal, autoCloseTime);
 }

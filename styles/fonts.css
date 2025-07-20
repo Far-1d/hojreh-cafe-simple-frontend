@@ -14,3 +14,10 @@
     font-style: normal;
   }
   
+    
+  @font-face {
+    font-family: 'Neirizi';
+    src: url('../fonts/Neirizi.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+  }

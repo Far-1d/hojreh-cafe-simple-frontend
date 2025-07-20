@@ -12,3 +12,14 @@
 .dot.active {
   background-color: #665541;
 }
+
+.disabled\:bg-\[\#a5cddf\] {
+  &:disabled {
+    background-color: #a5cddf;
+  }
+}
+.disabled\:text-\[\#696969\] {
+  &:disabled {
+    color: #696969;
+  }
+}

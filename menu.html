@@ -10,152 +10,179 @@
     <link type="text/css" rel="stylesheet" href="styles/menu.css"/>
     <link type="text/css" rel="stylesheet" href="styles/dialog.css"/>
     <link type="text/css" rel="stylesheet" href="styles/skeleton.css"/>
-    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="styles/fonts.css">
     <script src="js/script.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/dialog.js"></script>
     <script src="js/search.js"></script>
   </head>
-  <body class="relative h-screen w-full bg-[#fff9f0] overflow-x-hidden" style="font-family: Badr; font-size: large;">
+  <body class="relative min-h-screen w-full bg-[#fff9f0] overflow-x-hidden" style="font-family: Neirizi; font-size: large;">
     <div class="w-full h-full bg-[#fff9f0] flex items-center justify-center">
-    <div class="relative w-full h-full bg-[#fff9f0] max-w-[520px] px-10">
+      <div class="relative w-full h-full bg-[#fff9f0] max-w-[520px] px-10">
 
-      <!-- nav and category absolute container -->
-      <div class="absolute top-6 left-0 w-[96vw] max-w-[520px] translate-x-[-50%] bg-[#fff9f0] px-10">
-        <!-- navbar -->
-        <div id="nav-container" class="flex w-full">
-          <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
-            <button class="flex w-10 items-center justify-center" onclick=showSearch()>
-              <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
-            </button>
+        <!-- nav and category absolute container -->
+        <div class="absolute top-6 left-0 w-[96vw] max-w-[520px] translate-x-[-50%] bg-[#fff9f0] px-10">
+          <!-- navbar -->
+          <div id="nav-container" class="flex w-full">
+            <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
+              <button class="flex w-10 items-center justify-center" onclick=showSearch()>
+                <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
+              </button>
 
-            <button class="flex w-16 items-center justify-center overflow-visible" onclick=goToHome()>
-              <img src="/images/logo.png" alt="logo" class="w-[95px] logo" loading="eager" decoding="async"/>
-            </button>
+              <button class="flex w-16 items-center justify-center overflow-visible" onclick=goToHome()>
+                <img src="/images/logo.png" alt="logo" class="w-[95px] logo" loading="eager" decoding="async"/>
+              </button>
 
-            <button class="menu-btn flex w-10 items-center justify-center" onclick=toggleMenu()>
-              <div class="h-8 w-8">
-                <img src="/images/menu.svg" alt="menu" class="h-8 w-8" loading="eager" decoding="async"/>
+              <button class="menu-btn flex w-10 items-center justify-center" onclick=toggleMenu()>
+                <div class="h-8 w-8">
+                  <img src="/images/menu.svg" alt="menu" class="h-8 w-8" loading="eager" decoding="async"/>
+                </div>
+              </button>
+            </nav>
+          </div>
+
+          <!-- category list -->
+          <div id="category-list" class="mt-6 h-12 w-full overflow-x-hidden overflow-y-hidden p-[1px] px-4" dir="rtl">
+            <div class="category_list flex h-12 w-full mx-3 items-start overflow-y-hidden overflow-x-auto">
+              <!-- filled with category buttons -->
+
+              <div class="sk-loading">
+                <h4 class="sk-category"></h4>
               </div>
-            </button>
-          </nav>
+              
+              <div class="sk-loading">
+                <h4 class="sk-category"></h4>
+              </div>
+
+              <div class="sk-loading">
+                <h4 class="sk-category"></h4>
+              </div>
+
+              <div class="sk-loading">
+                <h4 class="sk-category"></h4>
+              </div>
+              
+            </div>
+          </div>
         </div>
 
-        <!-- category list -->
-        <div id="category-list" class="mt-6 h-12 w-full overflow-x-hidden overflow-y-hidden p-[1px] px-4" dir="rtl">
-          <div class="category_list flex h-12 w-full mx-3 items-start overflow-y-hidden overflow-x-auto">
-            <!-- filled with category buttons -->
+        <!-- this should be fit to screen -->
+        <div class="flex h-screen flex-col overflow-y-hidden pt-[112px] pb-2">
+          <div class="item_list flex flex-col items-center justify-start w-full h-screen px-3 pb-1 overflow-y-auto">
+            <!-- filled with item div content -->
 
-            <div class="sk-loading">
-              <h4 class="sk-category"></h4>
-            </div>
-            
-            <div class="sk-loading">
-              <h4 class="sk-category"></h4>
+            <div class="skeleton card sk-loading">
+    
+              <div class="sk-content">
+                <h5></h5>
+                <div class="sk-description">
+                  
+                </div>
+              </div>
+              
+              <div class="sk-image">
+                
+              </div>
             </div>
 
-            <div class="sk-loading">
-              <h4 class="sk-category"></h4>
+            <div class="skeleton card sk-loading">
+    
+              <div class="sk-content">
+                <h5></h5>
+                <div class="sk-description">
+                  
+                </div>
+              </div>
+              
+              <div class="sk-image">
+                
+              </div>
             </div>
 
-            <div class="sk-loading">
-              <h4 class="sk-category"></h4>
+            <div class="skeleton card sk-loading">
+    
+              <div class="sk-content">
+                <h5></h5>
+                <div class="sk-description">
+                  
+                </div>
+              </div>
+              
+              <div class="sk-image">
+                
+              </div>
             </div>
-            
+
+            <div class="skeleton card sk-loading">
+    
+              <div class="sk-content">
+                <h5></h5>
+                <div class="sk-description">
+                  
+                </div>
+              </div>
+              
+              <div class="sk-image">
+                
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
 
-      <!-- this should be fit to screen -->
-      <div class="flex h-screen flex-col overflow-y-hidden pt-[112px] pb-2">
-        <div class="item_list flex flex-col items-center justify-start w-full h-screen px-3 pb-1 overflow-y-auto">
-          <!-- filled with item div content -->
-
-          <div class="skeleton card sk-loading">
-  
-            <div class="sk-content">
-              <h5></h5>
-              <div class="sk-description">
-                
-              </div>
-            </div>
-            
-            <div class="sk-image">
-              
-            </div>
-          </div>
-
-          <div class="skeleton card sk-loading">
-  
-            <div class="sk-content">
-              <h5></h5>
-              <div class="sk-description">
-                
-              </div>
-            </div>
-            
-            <div class="sk-image">
-              
-            </div>
-          </div>
-
-          <div class="skeleton card sk-loading">
-  
-            <div class="sk-content">
-              <h5></h5>
-              <div class="sk-description">
-                
-              </div>
-            </div>
-            
-            <div class="sk-image">
-              
-            </div>
-          </div>
-
-          <div class="skeleton card sk-loading">
-  
-            <div class="sk-content">
-              <h5></h5>
-              <div class="sk-description">
-                
-              </div>
-            </div>
-            
-            <div class="sk-image">
-              
-            </div>
-          </div>
-
+        <!-- complete order btn -->
+        <div class="cart-button cursor-pointer absolute bottom-10 left-[30px] flex h-14 w-40 items-center justify-center gap-2 rounded-[16px] bg-[#018FCC] text-white" dir="rtl">
+          <span class="text-xl hover:font-bold">سبد خرید</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.58683 10H21.4132M18.0351 6L5.96486 6C3.45403 6 1.57594 8.32624 2.08312 10.808L3.71804 18.808C4.09787 20.6666 5.71942 22 7.59978 22H16.4002C18.2806 22 19.9021 20.6666 20.282 18.808L21.9169 10.808C22.4241 8.32624 20.546 6 18.0351 6Z" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 2L6 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 2L18 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 14L9 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 14L15 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-      </div>
 
-      <!-- complete order btn -->
-      <div class="cart-button cursor-pointer absolute bottom-10 left-[30px] flex h-14 w-40 items-center justify-center gap-2 rounded-[16px] bg-[#018FCC] text-white" dir="rtl">
-        <span class="text-xl hover:font-bold">سبد خرید</span>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2.58683 10H21.4132M18.0351 6L5.96486 6C3.45403 6 1.57594 8.32624 2.08312 10.808L3.71804 18.808C4.09787 20.6666 5.71942 22 7.59978 22H16.4002C18.2806 22 19.9021 20.6666 20.282 18.808L21.9169 10.808C22.4241 8.32624 20.546 6 18.0351 6Z" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M9 2L6 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M15 2L18 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M9 14L9 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M15 14L15 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
+        <!-- menu -->
+        <div id="sideMenu" class="slide-menu flex flex-col items-center justify-start bg-[#FFF6E8] py-8">
+          <a href="/profile.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">پروفایل</a>
+          <a href="/order-history.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">سفارش های پیشین</a>
+          <a href="/about-us.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">درباره ما</a>
+          <div class="w-full h-full"></div>
+          <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]" onclick=logout()>خروج</button>
+        </div>
+        <div id="closeMenu" class="slide-left" onclick=toggleClose()>
+          <img src="/images/close.svg" alt="close" class="h-6 w-6" loading="eager" decoding="async">
+        </div>
 
-      <!-- menu -->
-      <div id="sideMenu" class="slide-menu flex flex-col items-center justify-start bg-[#FFF6E8] py-8">
-        <a href="/profile.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">پروفایل</a>
-        <a href="/order-history.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">سفارش های پیشین</a>
-        <a href="/about-us.html" class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]">درباره ما</a>
-        <div class="w-full h-full"></div>
-        <button class="w-full px-6 pb-4 pt-3 text-right text-base font-bold text-[#241E17] hover:bg-[#2CA7DB]" onclick=logout()>خروج</button>
       </div>
-      <div id="closeMenu" class="slide-left" onclick=toggleClose()>
-        <img src="/images/close.svg" alt="close" class="h-6 w-6" loading="eager" decoding="async">
-      </div>
-
     </div>
+
+  <!-- Modal HTML -->
+  <div id="modal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5);; justify-content: center; align-items: center;z-index: 1000;">
+    <div style="
+        background: #fff;
+        padding: 20px 30px;
+        border-radius: 8px;
+        max-width: 300px;
+        width: 90%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        position: relative;
+        text-align: center;
+    ">
+      <span id="closeBtn" style="
+          position: absolute;
+          top: 10px;
+          right: 15px;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 24px;
+          line-height: 1;
+          user-select: none;
+      ">&times;</span>
+      <p id="modalMessage" style="margin: 0; font-size: 16px;"></p>
+    </div>
+  </div>
   </body>
 </html>
 

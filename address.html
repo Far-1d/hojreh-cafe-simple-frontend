@@ -8,13 +8,13 @@
     
     <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
     <link type="text/css" rel="stylesheet" href="styles/dialog.css"/>
-    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="styles/fonts.css">
     <script src="js/script.js"></script>
     <script src="js/dialog.js"></script>
     <script src="js/address.js"></script>
   </head>
   <body class="relative min-h-screen w-full overflow-x-hidden">
-    <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: Badr; font-size: large;">
+    <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: Neirizi; font-size: large;">
       <div class="min-h-screen w-full max-w-[520px] bg-[#fff9f0] p-6 px-10 relative">
         <!-- navbar -->
         <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
@@ -47,11 +47,15 @@
             <input type="text" name="name" placeholder="کافه حجره" id="name" class="mt-2 h-14 min-w-full rounded-[16px] border border-[#241E17] bg-[#FFFDFA] px-3" required/>
           </div>
 
-          <!-- <div class="my-3 h-full w-full">
+          <div class="my-3 h-full w-full">
             <label for="location" class="w-full text-[#665541]" style="font-weight:700">موقعیت مکانی</label>
-            <input name="location" id="location" class="mt-2 h-14 min-w-full rounded-[16px] border border-[#241E17] bg-[#FFFDFA] px-3" readonly/>
+            <input type="hidden" name="location" id="location" dir="ltr" class="mt-2 h-14 min-w-full rounded-[16px] border border-[#241E17] bg-[#FFFDFA] px-3" readonly/>
           </div>
-          <iframe src="leaflet/main.html" width="100%" height="400"></iframe> -->
+          <div class="w-full rounded-xl bg-gray-100 border-2 border-[#2CA7DB]/20">
+            <div class="w-full h-full rounded-lg">
+              <iframe id="map-iframe" src="leaflet/address.html" width="100%" height="400"></iframe>
+            </div>
+          </div>
         </div>
 
         <!-- menu -->

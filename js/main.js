@@ -22,7 +22,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         await fetchAndStoreData('GET', `${base_url}/api/menu/item/best?restaurant=${restaurant_id}&size=${best_seller_count}`, 'best_sellers', {}, null, 60*60*24);
         fillBestSeller();
-    
+        
+        const allow_overtime = branch.overtime_orders;
+
+        if (! allow_overtime){
+            const is_overtime = compare_time();
+            // if (is_overtime){
+            //     showModal("کافه الان بسته شده س", 6000)
+            // }
+        }
     } catch (error) {
         console.log("cought an error: ",error);
     }
@@ -54,7 +62,9 @@ function createBestSellerItem(item){
     p.className = "w-full text-base font-bold";
 
     p.textContent = convertToPersianNumber(item.name)
-    img.src = changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image)
+    img.src = (item.images && item.images.length > 0) ?
+        changeImageUrl(item.images[0].thumbnail ? item.images[0].thumbnail : item.images[0].image) :
+        '/images/default_pic.png';
     img.alt = `${item.name} image`;
     img.loading = "lazy";
     img.decoding = "async";
@@ -80,17 +90,13 @@ function changeImageUrl(img){
 
 
 function fillContact(restaurant, branch){
-    // best_seller items
-    const best_seller_title = document.getElementsByClassName("best_seller")[0];
-    best_seller_title.textContent = "پر فروش های "+restaurant.name;
+    // // best_seller items
+    // const best_seller_title = document.getElementsByClassName("best_seller")[0];
+    // best_seller_title.textContent = "پر فروش های "+restaurant.name;
 
-    // menu button
-    const menu = document.getElementsByClassName("restaurant_menu")[0];
-    menu.textContent = 'منو '+ restaurant.name;
-
-    // about us button text
-    const about_us = document.getElementsByClassName("about_us_text")[0];
-    about_us.textContent = 'درباره '+ restaurant.name;
+    // // menu button
+    // const menu = document.getElementsByClassName("restaurant_menu")[0];
+    // menu.textContent = 'منو '+ restaurant.name;
 
     // branch address
     const address_p = document.getElementsByClassName("address")[0];
@@ -99,6 +105,7 @@ function fillContact(restaurant, branch){
     // branch phone numbers
     const phone_number = document.getElementsByClassName("phone_number")[0];
     phone_number.textContent =  convertToPersianNumber(branch.phone);
+    phone_number.href = `tel:${branch.phone}`
 }
 
 function fillWorkHour(){
@@ -115,14 +122,14 @@ function fillWorkHour(){
     
     parsedData.forEach(hour => {
         const div = document.createElement('div');
-        div.className = "flex items-center justify-between w-full h-full"
+        div.className = "flex justify-between items-center py-2 border-b border-[#2CA7DB]/10 last:border-b-0"
 
-        const p1 = document.createElement('p'); 
-        p1.className = "my-2 font-normal text-sm shrink-0 line-clamp-1 text-neutral-900"
+        const p1 = document.createElement('span'); 
+        p1.className = "text-[#665541] font-medium"
         p1.textContent = ` ${hour.title}`
 
-        const p2 = document.createElement('p'); 
-        p2.className = "my-2 font-bold text-sm w-full line-clamp-1 text-neutral-900 text-left"
+        const p2 = document.createElement('span'); 
+        p2.className = "text-[#665541] font-bold"
         p2.textContent = `${ convertToPersianNumber(formatTime(hour.start_time))} الی ${convertToPersianNumber(formatTime(hour.end_time))}`
         
         div.appendChild(p1);
@@ -146,3 +153,43 @@ function fillSocialMedia(restaurant){
 
 }
 
+
+function showModal(message, autoCloseTime = 3000) {
+  const modal = document.getElementById('modal');
+  const modalMessage = document.getElementById('modalMessage');
+  const closeBtn = document.getElementById('closeBtn');
+
+  modalMessage.textContent = message;
+  modal.style.display = 'flex'; // Show modal
+
+  function closeModal() {
+    modal.style.display = 'none'; // Hide modal
+    closeBtn.removeEventListener('click', closeModal);
+    clearTimeout(autoCloseTimeout);
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+
+  const autoCloseTimeout = setTimeout(closeModal, autoCloseTime);
+}
+
+function compare_time(){
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 (Sun) to 6 (Sat)
+    const currentTime = now.toTimeString().slice(0, 8); // "HH:MM"
+    
+    const schedule = getWithExpiry('hour');
+
+    let flag = false;
+
+    schedule.forEach(hour => {
+        if (hour.title == "هر روز" && currentDay != 5){
+            if(currentTime < hour.start_time || currentTime > hour.end_time) flag = true;
+        
+        } else if (hour.title == "جمعه" && currentDay == 5) {
+            if(currentTime < hour.start_time || currentTime > hour.end_time) flag = true;
+        }
+    });
+
+    return flag;
+}

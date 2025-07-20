@@ -55,23 +55,27 @@ class Cart {
             item.qty = 0; // Initialize quantity for new item
             // increase qty if an item is selected
             if (type=='item') item.qty += 1;
-
-            item.options.forEach(option => {
-                option.qty=0;   // Initialize quantity for option
-                // increase qty if an option is selected
-                if (type=='option' && inp_option==option) option.qty += 1;
             
-                option.addons.forEach(addon => {
-                    addon.qty=0; // Initialize quantity for option addon
-                    // increase qty if an option addon is selected
-                    if (type=='option_addon' && inp_addon==addon) addon.qty += 1;
+            if (item.options){
+                item.options.forEach(option => {
+                    option.qty=0;   // Initialize quantity for option
+                    // increase qty if an option is selected
+                    if (type=='option' && inp_option==option) option.qty += 1;
+                
+                    option.addons.forEach(addon => {
+                        addon.qty=0; // Initialize quantity for option addon
+                        // increase qty if an option addon is selected
+                        if (type=='option_addon' && inp_addon==addon) addon.qty += 1;
+                    });
                 });
-            });
-            item.addons.forEach(addon => {
-                addon.qty = 0;
-                // increase qty if an option addon is selected
-                if (type=='item_addon' && inp_addon==addon) addon.qty += 1;
-            });
+            }
+            if (item.addons){
+                item.addons.forEach(addon => {
+                    addon.qty = 0;
+                    // increase qty if an option addon is selected
+                    if (type=='item_addon' && inp_addon==addon) addon.qty += 1;
+                });
+            }
             
             this.items.push(item);
         }
@@ -211,7 +215,7 @@ class Cart {
             if (inp_option != null) {
                 return existingItem.options.some(option => option.id === inp_option.id  && option.qty > 0);
             }
-            console.log()
+            
             return this.items.some(cartItem => cartItem.id === item.id && cartItem.qty > 0);
         }
         return false;

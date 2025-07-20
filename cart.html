@@ -8,13 +8,13 @@
     
     <link type="text/css" rel="stylesheet" href="styles/styles.css"/>
     <link type="text/css" rel="stylesheet" href="styles/cart-page.css"/>
-    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="styles/fonts.css">
     <script src="js/script.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/cart_page.js"></script>
   </head>
-  <body class="relative min-h-screen w-full overflow-x-hidden">
-    <div class="flex w-full items-center justify-center bg-[#fff9f0]" style="font-family: Badr; font-size: large;">
+  <body class="relative min-h-screen w-full overflow-x-hidden" style="font-family: Neirizi; font-size: large;">
+    <div class="flex w-full items-center justify-center bg-[#fff9f0]">
       <div class="min-h-screen w-full max-w-[520px] bg-[#fff9f0] p-6 px-10 relative">
         <!-- navbar -->
         <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
@@ -68,11 +68,38 @@
         <button class="forward-button col-span-2 h-14 rounded-[16px] bg-[#018FCC] text-lg text-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">تکمیل خرید</button>
       </div>
     </div>
+  
+    <!-- Modal HTML -->
+    <div id="modal" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center;z-index: 1000;">
+      <div style="
+          background: #fff;
+          padding: 20px 30px;
+          border-radius: 8px;
+          max-width: 350px;
+          width: 90%;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+          position: relative;
+          text-align: center;
+      ">
+        <span id="closeBtn" style="
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 28px;
+            line-height: 1;
+            user-select: none;
+        ">&times;</span>
+        <p id="modalMessage" style="margin: 0; font-size: 22px;"></p>
+      </div>
+    </div>
 
     <style>
       input:focus {
         font-weight: 700; /* Change to bold when focused */
       }
     </style>
+
   </body>
 </html>

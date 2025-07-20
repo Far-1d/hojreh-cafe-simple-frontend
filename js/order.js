@@ -50,7 +50,7 @@ class Order {
 
     saveToLocalStorage() {
         const orderDetails = this.getOrderDetails();
-        const expiryTime = Date.now() + 30 * 60 * 1000; // 4 minutes from now
+        const expiryTime = Date.now() + 30 * 60 * 1000; // 30 minutes from now
         const dataToStore = {
             orderDetails,
             expiry: expiryTime
@@ -108,7 +108,7 @@ class Order {
     }
     
     createBody(cart){
-        const restaurant = getWithExpiry('restaurant');
+        const branch = getWithExpiry('branch');
         
         const cart_data = {};
         // cart.getItems().forEach(item => {
@@ -116,7 +116,7 @@ class Order {
         // });
 
         const body = new FormData();
-        body.append('restaurant', restaurant.id);
+        body.append('branch', branch[0].id);
         if (this.address) body.append('address', this.address);
         if (this.deliveryTime) body.append('deliver_time', this.deliveryTime);
         body.append('delivery', this.deliveryType);

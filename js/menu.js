@@ -26,47 +26,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     try{
         // get menus
         if (! getWithExpiry('menu')){
-            await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*60*24);
+            await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*15); // expiry = 15 min
         }
         
         if (! getWithExpiry('category')){
             // get categories
             const menu = getWithExpiry('menu')[0];
             const menu_id = menu.id;
-            await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {}, null, 60*60*24);
+            await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {}, null, 60*5); // expiry = 5 min
         }
         
         if (! getWithExpiry('items')){
             // get items for each category , concatenate them, store 'em
+            const menu = getWithExpiry('menu')[0];
             const categories = getWithExpiry('category');
-            let items = [];
-
-            // Use Promise.all to wait for all fetch requests
-            const itemFetchPromises = categories.map(async (category) => {
-                const category_id = category.id;
-                await fetchAndStoreData('GET', `${base_url}/api/menu/item/list/${category_id}`, 'cat_items', {});
-                const catItems = getWithExpiry('cat_items') || [];
-                return catItems; // Return items for this category
-            });
-
-            // Wait for all item fetches to complete
-            const fetchedItemsArrays = await Promise.all(itemFetchPromises);
-            
-            // Flatten the array of arrays into a single array
-            fetchedItemsArrays.forEach(catItems => {
-                items = items.concat(catItems);
-            });
-            
-            setWithExpiry("items", items, 60*60*24);
+            await fetchAndStoreData('GET', `${base_url}/api/menu/get/${menu.id}`, 'items', {}, null, 60*1); // expiry = 1 min
         }
+
         fillCategory();
+
         if (isSearching != "true"){
             fillItems(cart);
         } else {
             categoryContainer.style.display = 'none';
         }
+
     } catch (error) {
-        // console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error);
     }
     
     runImageLoading();
@@ -118,6 +104,7 @@ function createCategoryElement(category, idx) {
     const button = document.createElement('button');
     button.className = "category-button mx-1 flex h-10 w-[95px] flex-shrink-0 items-center justify-around rounded-[16px] px-1 pb-1 text-center text-xs";
     button.id = `category-${idx}`
+    button.style.fontSize = '18px';
 
     const span = document.createElement('span');
     span.className = "text-[#665541]";
@@ -141,21 +128,36 @@ function fillItems(cart, isFromSearch=false){
     const itemsDiv = document.getElementsByClassName('item_list')[0];
     itemsDiv.innerHTML = "";
     if (!isFromSearch){
-        const categories = getWithExpiry('category');
-        const items = getWithExpiry('items');
+        const menu_items = getWithExpiry('items');
         
-        categories.forEach((category, idx) => {
+        if (! menu_items) { window.location.href = "/menu.html" }
+
+        menu_items.categories.forEach((category, idx) => {
             const catDiv = createCategoryHeader(category.name, idx);
             itemsDiv.appendChild(catDiv)
-            items.forEach(item=> {
-                if (item.category.id === category.id){
-                    // check item.images length
-                    const imgLink = item.images[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_pic.png'
-                    const itemDiv = createItemElement(item, imgLink, cart)
-                    itemsDiv.appendChild(itemDiv)
+            
+            let items = [];
+
+            if (category.subcategories.length == 0) {
+                items = category.items;
+            }
+            else {
+                let sub_items = [];
+                for (let i = 0; i < category.subcategories.length; i++) {
+
+                    sub_items = [...sub_items, ...category.subcategories[i].items];
                 }
+                
+                items = [...category.items, ...sub_items];
+            }
+            
+            items.forEach(item=> {
+                const imgLink = item.images?.[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_pic.png'
+                const itemDiv = createItemElement(item, imgLink, cart)
+                itemsDiv.appendChild(itemDiv)
             })
         });
+
     } else {
         const resultDiv = document.createElement('div');
         resultDiv.className = 'text-xl text-[#665541] w-full my-3 mt-10';
@@ -234,7 +236,7 @@ function createItemElement(item, image, cart){
     img_div.appendChild(img_inner_div)
     
     let spaceBelow = 0;
-    if (! single_words[item.single_word]) spaceBelow += 5;
+    if (! item.single_word) spaceBelow += 5;
     if (! item.description) spaceBelow += 5;
 
     const name_description_div = document.createElement('div');
@@ -258,10 +260,33 @@ function createItemElement(item, image, cart){
     desc_span.className = "line-clamp-2 text-sm- font-normal text-[#665541]";
     desc_span.textContent = item.description;
 
+    // inventory
+    const row1_div3 = document.createElement('div');
+
+    if (item.show_inventory){
+        const inventory_text = document.createElement('p');
+        const inventory_value = document.createElement('span');
+        inventory_text.className = "text-sm";
+        inventory_value.className = "text-sm text-[#665541]";
+
+        row1_div3.className = "mt-3 flex w-full items-center justify-between";
+        
+        inventory_text.textContent = "موجودی: ";
+        inventory_value.textContent = item.inventory == 0 ? "اتمام موجودی" : `${item.inventory}`
+        
+        if (item.inventory == 0) {
+            inventory_value.style.color ="#eb2762";
+        }
+
+        inventory_text.appendChild(inventory_value);
+        row1_div3.appendChild(inventory_text);
+    }
+
     redirect_button.appendChild(h3_name);
     button_holder_div.appendChild(redirect_button);
     button_holder_div.appendChild(sw_span);
     button_holder_div.appendChild(desc_span);
+    button_holder_div.appendChild(row1_div3);
     
     name_description_div.appendChild(button_holder_div);
     img_div.appendChild(name_description_div);
@@ -270,6 +295,7 @@ function createItemElement(item, image, cart){
     const row2_div1 = document.createElement('div');
     row2_div1.className = "mt-3 flex w-full items-center justify-between";
 
+    // item buy button
     if ((item.options.length && item.own_price_visible) || !item.options.length){
         const price_span = document.createElement('span');
         price_span.className = "text-xl font-bold text-[#665541]";
@@ -282,10 +308,12 @@ function createItemElement(item, image, cart){
         row2_div1.appendChild(row2_div2);
         row2_div1.appendChild(price_span);
     }
-
     
+    
+
     mainDiv.appendChild(img_div);
-    mainDiv.appendChild(row2_div1);
+    mainDiv.appendChild(row2_div1); 
+
     if (item.options){
         const row_3 = createItemOptionRow(item, cart);
         mainDiv.appendChild(row_3);
@@ -341,7 +369,7 @@ function itemCartButton(item, cart, option=null) {
         if (!cart.isInCart(item, option)) {
             // Create "Add to Cart" button
             const button = document.createElement('button');
-            button.className = "flex h-8 w-14 items-center justify-center rounded-[12px] bg-[#018FCC]";
+            button.className = "flex h-8 w-14 items-center justify-center rounded-[12px] bg-[#018FCC] disabled:bg-[#a5cddf] disabled:text-[#696969]";
             button.innerHTML = `
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 13V19" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -352,8 +380,14 @@ function itemCartButton(item, cart, option=null) {
                     <path d="M14.9998 2L17.9998 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" />
                 </svg>
             `;
+            
+            if (item.show_inventory && item.inventory == 0) {
+                button.disabled = true;
+            }
+
             button.addEventListener('click', () => {
                 const type = option==null?'item':'option';
+
                 cart.addItem(item, type, option);
                 updateButtonState(); // Update button state after adding
             });
@@ -376,6 +410,18 @@ function itemCartButton(item, cart, option=null) {
             const type = option==null?'item':'option';
 
             plus.addEventListener('click', () => {
+                if (item.show_inventory){
+                    if (option==null){
+                        if (item.inventory <= cart.itemQty(item)){
+                            return showModal('انتخاب بیش از حد مجاز نیست', 5000);
+                        }
+                    }
+                    else {
+                        if (item.inventory <= cart.optionQty(item, option)){
+                            return showModal('انتخاب بیش از حد مجاز نیست', 5000);
+                        }
+                    }
+                }
                 cart.addItem(item, type, option);
                 qtySpan.textContent = convertToPersianPrice(option==null? cart.itemQty(item): cart.optionQty(item, option)); // Update quantity display
             });
@@ -526,4 +572,23 @@ function connect_scroll_functionality(){
 
     initObserver(); // Initial call to set up the observer
 
+}
+
+function showModal(message, autoCloseTime = 3000) {
+  const modal = document.getElementById('modal');
+  const modalMessage = document.getElementById('modalMessage');
+  const closeBtn = document.getElementById('closeBtn');
+
+  modalMessage.textContent = message;
+  modal.style.display = 'flex'; // Show modal
+
+  function closeModal() {
+    modal.style.display = 'none'; // Hide modal
+    closeBtn.removeEventListener('click', closeModal);
+    clearTimeout(autoCloseTimeout);
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+
+  const autoCloseTimeout = setTimeout(closeModal, autoCloseTime);
 }

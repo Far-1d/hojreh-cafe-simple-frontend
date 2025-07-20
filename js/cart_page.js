@@ -15,6 +15,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     forwardButton(cart);
     returnButton();
+
+    const branch = getWithExpiry('branch')[0];
+    const overtime = branch.overtime_orders;
+
+    if (! overtime){
+        const is_overtime = compare_time();
+        if (is_overtime){
+            showModal("کافه الان بسته شده، سفارشت فردا بدستمون میرسه. ادامه میدی ؟", 10000)
+        }
+    }
 });
 
 
@@ -27,7 +37,12 @@ function fillItems(cart){
 
     items.forEach(item=> {
         // check item.images length
-        const imgLink = changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image)
+        var imgLink;
+        if (item.images && item.images.length){
+            imgLink = changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image)
+        } else {
+            imgLink = './images/default_pic.png';
+        }
         const itemDiv = createItemElement(item, imgLink, cart)
         itemsDiv.appendChild(itemDiv)
     })
@@ -64,7 +79,7 @@ function createItemElement(item, image, cart){
     img_div.appendChild(img_inner_div)
     
     let spaceBelow = 0;
-    if (! single_words[item.single_word]) spaceBelow += 5;
+    if (! item.single_word) spaceBelow += 5;
     if (! item.description) spaceBelow += 5;
 
     const name_description_div = document.createElement('div');
@@ -85,17 +100,40 @@ function createItemElement(item, image, cart){
     // single word
     const sw_span = document.createElement('span');
     sw_span.className = "line-clamp-2 text-sm font-normal text-[#665541]";
-    sw_span.textContent = single_words[item.single_word];
+    sw_span.textContent = item.single_word;
 
 
     const desc_span = document.createElement('span');
     desc_span.className = "line-clamp-2 text-sm font-normal text-[#665541]";
     desc_span.textContent = item.description;
 
+    // inventory
+    const row1_div3 = document.createElement('div');
+
+    if (item.show_inventory){
+        const inventory_text = document.createElement('p');
+        const inventory_value = document.createElement('span');
+        inventory_text.className = "text-sm";
+        inventory_value.className = "text-sm text-[#665541]";
+
+        row1_div3.className = "mt-3 flex w-full items-center justify-between";
+        
+        inventory_text.textContent = "موجودی: ";
+        inventory_value.textContent = item.inventory == 0 ? "اتمام موجودی" : `${item.inventory}`
+        
+        if (item.inventory == 0) {
+            inventory_value.style.color ="#eb2762";
+        }
+
+        inventory_text.appendChild(inventory_value);
+        row1_div3.appendChild(inventory_text);
+    }
+
     redirect_button.appendChild(h3_name);
     button_holder_div.appendChild(redirect_button);
     button_holder_div.appendChild(sw_span);
     button_holder_div.appendChild(desc_span);
+    button_holder_div.appendChild(row1_div3);
     
     name_description_div.appendChild(button_holder_div);
     img_div.appendChild(name_description_div);
@@ -103,7 +141,7 @@ function createItemElement(item, image, cart){
     // row 2
     const row2_div1 = document.createElement('div');
     row2_div1.className = "mt-3 flex w-full items-center justify-between";
-    
+
     if ((item.options.length && item.own_price_visible) || !item.options.length){
         const price_span = document.createElement('span');
         price_span.className = "text-xl font-bold text-[#665541]";
@@ -209,6 +247,19 @@ function itemCartButton(item, cart, option=null) {
             const type = option==null?'item':'option';
 
             plus.addEventListener('click', () => {
+                if (item.show_inventory){    
+                    if (option==null){
+                        if (item.inventory <= cart.itemQty(item)){
+                            return showModal('انتخاب بیش از حد مجاز نیست', 5000);
+                        }
+                    }
+                    else {
+                        if (item.inventory <= cart.optionQty(item, option)){
+                            return showModal('انتخاب بیش از حد مجاز نیست', 5000);
+                        }
+                    }
+                }
+
                 cart.addItem(item, type, option);
                 qtySpan.textContent = convertToPersianPrice(option==null? cart.itemQty(item): cart.optionQty(item, option)); // Update quantity display
                 updatePrice(cart);
@@ -278,3 +329,46 @@ function returnButton(){
         window.location.href = "menu.html";
     })
 };
+
+
+function showModal(message, autoCloseTime = 3000) {
+  const modal = document.getElementById('modal');
+  const modalMessage = document.getElementById('modalMessage');
+  const closeBtn = document.getElementById('closeBtn');
+
+  modalMessage.textContent = message;
+  modal.style.display = 'flex'; // Show modal
+
+  function closeModal() {
+    modal.style.display = 'none'; // Hide modal
+    closeBtn.removeEventListener('click', closeModal);
+    clearTimeout(autoCloseTimeout);
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+
+  const autoCloseTimeout = setTimeout(closeModal, autoCloseTime);
+}
+
+
+
+function compare_time(){
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 (Sun) to 6 (Sat)
+    const currentTime = now.toTimeString().slice(0, 8); // "HH:MM"
+    
+    const schedule = getWithExpiry('hour');
+
+    let flag = false;
+
+    schedule.forEach(hour => {
+        if (hour.title == "هر روز" && currentDay != 5){
+            if(currentTime < hour.start_time || currentTime > hour.end_time) flag = true;
+        
+        } else if (hour.title == "جمعه" && currentDay == 5) {
+            if(currentTime < hour.start_time || currentTime > hour.end_time) flag = true;
+        }
+    });
+
+    return flag;
+}
