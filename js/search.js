@@ -56,8 +56,8 @@ async function searchItems(){
     btn.disabled = true;
 
     try {
-        const restaurant = getWithExpiry('restaurant');
-        await fetchAndStoreData('GET', `${base_url}/api/menu/item/filter/${restaurant.id}?q=${item_name}`, 'searchedItems', {});
+        const cart = new Cart();
+        await searchItemsOptimized(item_name, cart);
     } catch (error) {
         console.log(error)
         showError('خطا اتصال به سرور');
@@ -69,8 +69,6 @@ async function searchItems(){
     const categoryContainer = document.getElementById('category-list');
     categoryContainer.style.display = 'none';
     
-    const cart = new Cart();
-    fillItems(cart, isFromSearch=true);
     btn.disabled = false;
 }
 
@@ -98,10 +96,14 @@ function exitSearch(){
     const categoryContainer = document.getElementById('category-list');
     categoryContainer.style.display = 'block';
 
+    // Reset infinite scroll state and reload first category
     const cart = new Cart();
-    fillItems(cart);
-    if (isSearching == "true"){
-        fillCategory();
+    const categories = getWithExpiry('category');
+    if (categories && categories.length > 0) {
+        currentCategoryIndex = 0;
+        loadedCategories.clear();
+        loadCategoryItems(categories[0].id, cart);
+        setupInfiniteScroll(cart);
     }
 }
 

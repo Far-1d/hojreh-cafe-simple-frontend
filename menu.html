@@ -17,16 +17,16 @@
     <script src="js/dialog.js"></script>
     <script src="js/search.js"></script>
   </head>
-  <body class="relative min-h-screen w-full bg-[#fff9f0] overflow-x-hidden" style="font-family: Neirizi; font-size: large;">
+  <body class="relative min-h-screen w-full bg-[#fff9f0] overflow-hidden" style="font-family: Neirizi; font-size: large;">
     <div class="w-full h-full bg-[#fff9f0] flex items-center justify-center">
-      <div class="relative w-full h-full bg-[#fff9f0] max-w-[520px] px-10">
+      <div class="relative w-full h-screen bg-[#fff9f0] max-w-[520px] px-10 flex flex-col">
 
         <!-- nav and category absolute container -->
-        <div class="absolute top-6 left-0 w-[96vw] max-w-[520px] translate-x-[-50%] bg-[#fff9f0] px-10">
+        <div class="w-full max-w-[520px] bg-[#fff9f0] px-4 pt-6">
           <!-- navbar -->
-          <div id="nav-container" class="flex w-full">
+          <div id="nav-container" class="flex w-full h-14">
             <nav class="flex h-[56px] w-full items-center justify-between rounded-[16px] bg-[#FFF6E8] px-3 overflow-visible shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)]">
-              <button class="flex w-10 items-center justify-center" onclick=showSearch()>
+              <button class="flex w-10 items-center justify-center cursor-pointer" onclick=showSearch()>
                 <img src="/images/search.png" alt="search-bar" class="h-8 w-8" loading="eager" decoding="async"/>
               </button>
 
@@ -67,8 +67,8 @@
           </div>
         </div>
 
-        <!-- this should be fit to screen -->
-        <div class="flex h-screen flex-col overflow-y-hidden pt-[112px] pb-2">
+        <!-- items -->
+        <div class="flex flex-col h-full overflow-y-hidden pb-20">
           <div class="item_list flex flex-col items-center justify-start w-full h-screen px-3 pb-1 overflow-y-auto">
             <!-- filled with item div content -->
 

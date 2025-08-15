@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // return to main page if no branch id is fonud 
+    // return to main page if no branch id is found 
     if (getWithExpiry('branch') == null){
         window.location.href = "main.html"
         return;
@@ -23,30 +23,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         const itemsDiv = document.getElementsByClassName('item_list')[0];
         itemsDiv.innerHTML = "<p class='mt-10 text-[#241E17]'>متن جستجو را وارد کنید</p>";
     }
+    
     try{
         // get menus
         if (! getWithExpiry('menu')){
             await fetchAndStoreData('GET', `${base_url}/api/menu/list/${branch_id}`, 'menu', {}, null, 60*15); // expiry = 15 min
         }
         
+        // Load categories using existing API
+        const menu = getWithExpiry('menu')[0];
+        const menu_id = menu.id;
+        
         if (! getWithExpiry('category')){
-            // get categories
-            const menu = getWithExpiry('menu')[0];
-            const menu_id = menu.id;
             await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {}, null, 60*5); // expiry = 5 min
         }
-        
-        if (! getWithExpiry('items')){
-            // get items for each category , concatenate them, store 'em
-            const menu = getWithExpiry('menu')[0];
-            const categories = getWithExpiry('category');
-            await fetchAndStoreData('GET', `${base_url}/api/menu/get/${menu.id}`, 'items', {}, null, 60*1); // expiry = 1 min
-        }
-
-        fillCategory();
 
         if (isSearching != "true"){
-            fillItems(cart);
+            // Load categories sequentially like puzzle pieces
+            await loadCategoriesSequentially(cart);
         } else {
             categoryContainer.style.display = 'none';
         }
@@ -57,6 +51,224 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     runImageLoading();
 });
+
+// Global variables for infinite scroll
+let currentCategoryIndex = 0;
+let isLoading = false;
+let allCategories = [];
+let loadedCategories = new Set();
+
+// New sequential loading function
+async function loadCategoriesSequentially(cart) {
+    const categories = getWithExpiry('category');
+    if (!categories || categories.length === 0) return;
+    
+    allCategories = categories; // Store for infinite scroll
+    const categoryContainer = document.getElementsByClassName('category_list')[0];
+    const itemsContainer = document.getElementsByClassName('item_list')[0];
+    
+    // Clear containers
+    categoryContainer.innerHTML = '';
+    itemsContainer.innerHTML = '';
+    
+    // Show initial loading indicator
+    itemsContainer.innerHTML = '<div class="flex justify-center items-center h-32"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#665541]"></div></div>';
+    
+    // Load each category one by one
+    for (let i = 0; i < categories.length; i++) {
+        const category = categories[i];
+        
+        try {
+            // Load items for this category
+            const response = await fetch(`${base_url}/api/menu/item/list/${category.id}`);
+            const items = await response.json();
+            
+            // Create and add category button
+            const categoryButton = createCategoryElement(category, i);
+            categoryContainer.appendChild(categoryButton);
+            
+            console.log(`category ${category.id} is loaded with ${items.length} items`)
+            
+            // If this is the first category, load its items immediately
+            if (i === 0) {
+                // Clear loading indicator
+                itemsContainer.innerHTML = '';
+            }
+
+            // Add category header and items
+            if (items && items.length > 0) {
+                const catDiv = createCategoryHeader(category.name, i);
+                itemsContainer.appendChild(catDiv);
+                loadedCategories.add(category.id);
+                
+                items.forEach(item => {
+                    const imgLink = item.images?.[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_pic.png'
+                    const itemDiv = createItemElement(item, imgLink, cart)
+                    itemsContainer.appendChild(itemDiv)
+                });
+            } else {
+                itemsContainer.innerHTML = '<p class="mt-10 text-center text-[#665541]">هیچ آیتمی در این دسته بندی یافت نشد</p>';
+            }
+            
+            // Setup infinite scroll for first category
+            setupInfiniteScroll(cart);
+            
+            // Add a small delay to create the puzzle piece effect
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+        } catch (error) {
+            console.error(`Error loading category ${category.name}:`, error);
+            // Continue with next category even if one fails
+        }
+    }
+    
+    // Final setup
+    setTimeout(() => {
+        connect_scroll_functionality();
+        runImageLoading();
+    }, 500);
+}
+
+// Function to load items for a specific category (used when clicking category buttons)
+async function loadCategoryItems(categoryId, cart, isInfiniteScroll = false) {
+    if (isLoading) return;
+    isLoading = true;
+    
+    try {
+        const itemsDiv = document.getElementsByClassName('item_list')[0];
+        
+        // Show loading indicator only for first load
+        if (!isInfiniteScroll) {
+            itemsDiv.innerHTML = '<div class="flex justify-center items-center h-32"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#665541]"></div></div>';
+        }
+        
+        const response = await fetch(`${base_url}/api/menu/item/list/${categoryId}`);
+        const items = await response.json();
+        
+        if (!isInfiniteScroll) {
+            itemsDiv.innerHTML = "";
+        }
+        
+        if (items && items.length > 0) {
+            // Create category header
+            const category = allCategories.find(cat => cat.id === categoryId);
+            if (category && !loadedCategories.has(categoryId)) {
+                const catDiv = createCategoryHeader(category.name, currentCategoryIndex);
+                itemsDiv.appendChild(catDiv);
+                loadedCategories.add(categoryId);
+            }
+            
+            items.forEach(item => {
+                const imgLink = item.images?.[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_pic.png'
+                const itemDiv = createItemElement(item, imgLink, cart)
+                itemsDiv.appendChild(itemDiv)
+            });
+        } else if (!isInfiniteScroll) {
+            itemsDiv.innerHTML = '<p class="mt-10 text-center text-[#665541]">هیچ آیتمی در این دسته بندی یافت نشد</p>';
+        }
+        
+        setTimeout(() => {
+            connect_scroll_functionality();
+            runImageLoading();
+        }, 500);
+        
+    } catch (error) {
+        console.error("Error loading category items:", error);
+        if (!isInfiniteScroll) {
+            const itemsDiv = document.getElementsByClassName('item_list')[0];
+            itemsDiv.innerHTML = '<p class="mt-10 text-center text-red-500">خطا در بارگذاری آیتم‌ها</p>';
+        }
+    } finally {
+        isLoading = false;
+    }
+}
+
+// Infinite scroll function
+async function loadNextCategory(cart) {
+    if (isLoading || currentCategoryIndex >= allCategories.length) return;
+    
+    // Show loading indicator
+    const itemsDiv = document.getElementsByClassName('item_list')[0];
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'flex justify-center items-center h-16 my-4';
+    loadingDiv.innerHTML = '<div class="animate-spin rounded-full h-6 w-6 border-b-2 border-[#665541]"></div>';
+    itemsDiv.appendChild(loadingDiv);
+    
+    currentCategoryIndex++;
+    const nextCategory = allCategories[currentCategoryIndex];
+    
+    if (nextCategory && !loadedCategories.has(nextCategory.id)) {
+        await loadCategoryItems(nextCategory.id, cart, true);
+    }
+    
+    // Remove loading indicator
+    itemsDiv.removeChild(loadingDiv);
+}
+
+// Intersection Observer for infinite scroll
+function setupInfiniteScroll(cart) {
+    const itemsDiv = document.getElementsByClassName('item_list')[0];
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !isLoading) {
+                loadNextCategory(cart);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    // Create a sentinel element at the bottom
+    const sentinel = document.createElement('div');
+    sentinel.id = 'scroll-sentinel';
+    sentinel.style.height = '20px';
+    itemsDiv.appendChild(sentinel);
+    
+    observer.observe(sentinel);
+}
+
+// New function to search items using existing API
+async function searchItemsOptimized(searchTerm, cart) {
+    try {
+        const itemsDiv = document.getElementsByClassName('item_list')[0];
+        itemsDiv.innerHTML = '<div class="flex justify-center items-center h-32"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#665541]"></div></div>';
+        
+        const restaurant = getWithExpiry('restaurant');
+        if (!restaurant) {
+            throw new Error('Restaurant not found');
+        }
+        
+        const response = await fetch(`${base_url}/api/menu/item/filter/${restaurant.id}?q=${encodeURIComponent(searchTerm)}`);
+        const items = await response.json();
+        
+        itemsDiv.innerHTML = "";
+        
+        if (items && items.length > 0) {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'text-xl text-[#665541] w-full my-3 mt-10';
+            resultDiv.style.fontWeight = '700';
+            resultDiv.dir = 'rtl';
+            resultDiv.textContent = 'نتایج';
+            itemsDiv.appendChild(resultDiv);
+            
+            items.forEach(item => {
+                const imgLink = item.images?.[0] ? changeImageUrl(item.images[0].thumbnail? item.images[0].thumbnail : item.images[0].image): '/images/default_pic.png'
+                const itemDiv = createItemElement(item, imgLink, cart);
+                itemsDiv.appendChild(itemDiv);
+            });
+        } else {
+            itemsDiv.innerHTML = '<p class="mt-10 text-center text-[#665541]">موردی یافت نشد</p>';
+        }
+        
+        setTimeout(() => {
+            runImageLoading();
+        }, 500);
+        
+    } catch (error) {
+        console.error("Error searching items:", error);
+        const itemsDiv = document.getElementsByClassName('item_list')[0];
+        itemsDiv.innerHTML = '<p class="mt-10 text-center text-red-500">خطا در جستجو</p>';
+    }
+}
 
 
 const placeholderImage = 'images/default_pic.png';
@@ -89,20 +301,11 @@ function runImageLoading(){
 }
 
 
-function fillCategory(){
-    const category_div = document.getElementsByClassName('category_list')[0];
-    category_div.innerHTML = '';
-    const categories = getWithExpiry('category');
-    categories.forEach((category, idx) => {
-        const div = createCategoryElement(category, idx);
-        category_div.appendChild(div);
-    });
-}
-
 
 function createCategoryElement(category, idx) {
     const button = document.createElement('button');
-    button.className = "category-button mx-1 flex h-10 w-[95px] flex-shrink-0 items-center justify-around rounded-[16px] px-1 pb-1 text-center text-xs";
+    // button.className = "category-button mx-1 flex h-10 w-[95px] flex-shrink-0 items-center justify-around rounded-[16px] px-1 pb-1 text-center text-xs";
+    button.className = "category-button mx-1 flex h-10 flex-shrink-0 items-center justify-around rounded-[16px] px-4 pb-1 text-center text-xs text-nowrap border border-white/0 hover:border-[#FFA842]";
     button.id = `category-${idx}`
     button.style.fontSize = '18px';
 
@@ -188,9 +391,9 @@ function fillItems(cart, isFromSearch=false){
 // create a categoty element for item list
 function createCategoryHeader(name, idx){
     const div = document.createElement('div');
-    div.className = "mt-10 mb-6 flex w-full items-center justify-end item-section";
+    div.className = "mt-10 mb-6 flex w-full items-center justify-center item-section border-2 border-[#665541] border-dashed rounded-xl py-4 hover:bg-[#6655411b] duration-150";
     div.id = `section-${idx}`
-    
+
     const span = document.createElement('span');
     span.className = "text-xl font-bold text-[#665541]";
     span.textContent = name;
@@ -243,8 +446,9 @@ function createItemElement(item, image, cart){
     name_description_div.className = `col-span-4 h-full w-full flex items-center px-3 pb-${spaceBelow}`;   
 
     const button_holder_div = document.createElement('div');
-    button_holder_div.className = `flex flex-col justify-center items-start h-full`
+    button_holder_div.className = `flex flex-col justify-start items-start h-full pt-4`
     const redirect_button = document.createElement('div');
+    redirect_button.className = `pb-4`
     
     const h3_name = document.createElement('h3');
     h3_name.className = "text-xl font-bold text-[#665541] py-2";
@@ -252,13 +456,13 @@ function createItemElement(item, image, cart){
 
     // single word
     const sw_span = document.createElement('span');
-    sw_span.className = "line-clamp-2 text-sm- font-normal text-[#665541]";
-    sw_span.textContent = item.single_word;
+    sw_span.className = "line-clamp-2 text-sm text-[#665541] tracking-wide";
+    sw_span.textContent = convertToPersianNumber(item.single_word || '');
 
 
     const desc_span = document.createElement('span');
-    desc_span.className = "line-clamp-2 text-sm- font-normal text-[#665541]";
-    desc_span.textContent = item.description;
+    desc_span.className = "line-clamp-2 text-sm text-[#665541] tracking-wide";
+    desc_span.textContent = convertToPersianNumber(item.description || '');
 
     // inventory
     const row1_div3 = document.createElement('div');
@@ -478,8 +682,6 @@ function cartButton(){
 
 
 
-
-
 function connect_scroll_functionality(){
     // Get all category buttons
     const categoryButtons = document.querySelectorAll('.category-button');
@@ -492,19 +694,18 @@ function connect_scroll_functionality(){
         const section = document.getElementById(sectionId);
         section.scrollIntoView({ behavior: 'smooth' });
 
-        const button = document.getElementById(`category-${sectionId.charAt(sectionId.length - 1)}`);
+        const button = document.getElementById(`category-${sectionId.split('-')[1]}`);
         button.scrollIntoView({ behavior: 'smooth', inline: 'center' }); // Center the button in view
     }
 
     // Add click event listeners to category buttons
     categoryButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const sectionId = `section-${button.id.charAt(button.id.length - 1)}`; // Get corresponding section ID
+            const sectionId = `section-${button.id.split('-')[1]}`; // Get corresponding section ID
             disableObserver();
             
             scrollToSection(sectionId);
             setActiveButton(button);
-            setActiveSubElements(button);
             lastActiveButtonId = button.id;
 
             setTimeout(() => {
@@ -525,10 +726,6 @@ function connect_scroll_functionality(){
             if (img) img.classList.remove('active-img');
         });
         activeButton.classList.add('active-cat');
-    }
-
-    // Function to set active-sub class on span and img
-    function setActiveSubElements(activeButton) {
         const span = activeButton.querySelector('span');
         const img = activeButton.querySelector('img');
         
@@ -541,12 +738,11 @@ function connect_scroll_functionality(){
         observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const currentButtonId = `category-${entry.target.id.charAt(entry.target.id.length - 1)}`;
+                    const currentButtonId = `category-${entry.target.id.split('-')[1]}`;
                     // Only activate the button if it's not the same as the last active one
                     if (lastActiveButtonId !== currentButtonId) {
                         const button = document.getElementById(currentButtonId);
                         setActiveButton(button);
-                        setActiveSubElements(button);
 
                         button.scrollIntoView({ behavior: 'smooth', inline: 'center' });
                         lastActiveButtonId = currentButtonId; // Update last active button ID
