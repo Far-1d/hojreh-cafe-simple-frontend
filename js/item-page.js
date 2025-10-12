@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     const cart = new Cart(); // Create an instance of Cart
+    
+    // activate cart button
+    cartButton();
+    
     try{
         await fetchAndStoreData('GET', `${base_url}/api/menu/item/get/${item_id}`, 'single_item', {});
         fillPage(cart);
@@ -26,6 +30,9 @@ function fillPage(cart){
 
     const sw_span = document.getElementsByClassName('single_word')[0];
     sw_span.textContent = item.single_word;
+
+    const item_price = document.getElementsByClassName('item_price')[0];
+    item_price.textContent = `${convertToPersianPrice(item.price)} ت`;
 
     const p_description = document.getElementsByClassName('item-description')[0];
     p_description.textContent = item.description;
@@ -242,6 +249,27 @@ function carouselFunctions(photos) {
       });
     });
   }
+}
+
+
+function cartButton(){
+    const button = document.getElementsByClassName('cart-button')[0];
+    button.addEventListener('mouseleave', ()=>{
+        const svg = button.querySelector('svg');
+        svg.innerHTML = `<path d="M2.58683 10H21.4132M18.0351 6L5.96486 6C3.45403 6 1.57594 8.32624 2.08312 10.808L3.71804 18.808C4.09787 20.6666 5.71942 22 7.59978 22H16.4002C18.2806 22 19.9021 20.6666 20.282 18.808L21.9169 10.808C22.4241 8.32624 20.546 6 18.0351 6Z" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 2L6 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 2L18 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 14L9 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 14L15 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`
+    });
+    button.addEventListener('mouseenter', ()=>{
+        const svg = button.querySelector('svg');
+        svg.innerHTML = `<path fill-rule="evenodd" clip-rule="evenodd" d="M18.1896 6.00295L15.6 2.55004C15.3514 2.21867 14.8813 2.15152 14.55 2.40004C14.2186 2.64857 14.1514 3.11867 14.4 3.45004L16.3124 6H7.68749L9.59996 3.45004C9.84848 3.11867 9.78133 2.64857 9.44996 2.40004C9.11859 2.15152 8.64848 2.21867 8.39996 2.55004L5.81028 6.00295C3.91171 6.07556 2.40389 7.481 2.06934 9.25H21.9305C21.5959 7.48103 20.0882 6.07561 18.1896 6.00295ZM20.2819 18.808C19.902 20.6666 18.2805 22 16.4001 22H7.59969C5.71933 22 4.09778 20.6666 3.71795 18.808L2.08303 10.808C2.07908 10.7887 2.07527 10.7693 2.07161 10.75H21.9282C21.9245 10.7693 21.9207 10.7887 21.9168 10.808L20.2819 18.808ZM8.99976 13.25C9.41397 13.25 9.74976 13.5858 9.74976 14L9.74976 18C9.74976 18.4142 9.41397 18.75 8.99976 18.75C8.58554 18.75 8.24976 18.4142 8.24976 18L8.24976 14C8.24976 13.5858 8.58554 13.25 8.99976 13.25ZM15.7498 14C15.7498 13.5858 15.414 13.25 14.9998 13.25C14.5855 13.25 14.2498 13.5858 14.2498 14V18C14.2498 18.4142 14.5855 18.75 14.9998 18.75C15.414 18.75 15.7498 18.4142 15.7498 18V14Z" fill="#FFF9F0"/>`
+    });
+
+    button.addEventListener('click', ()=>{
+        window.location.href = "cart.html";
+    })
 }
 
 

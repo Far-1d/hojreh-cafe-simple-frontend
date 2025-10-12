@@ -44,6 +44,7 @@
           <div class="flex items-center justify-between w-full">
             <h1 class="item-name text-xl" style="font-weight: 700"></h1>
             <span class="text-sm single_word"></span>
+            <span class="text-sm item_price"></span>
           </div>
           <div class="inventory-container flex items-center justify-start w-full gap-2 pt-3">
             <p class="text-sm" style="font-weight: 300">موجودی:</p>
@@ -68,11 +69,22 @@
           <img src="/images/close.svg" alt="close" class="h-6 w-6" loading="eager" decoding="async">
         </div>
         
+        <!-- complete order btn -->
+        <div class="cart-button cursor-pointer mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-[16px] bg-[#018FCC] text-white" dir="rtl">
+          <span class="text-xl hover:font-bold">سبد خرید</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.58683 10H21.4132M18.0351 6L5.96486 6C3.45403 6 1.57594 8.32624 2.08312 10.808L3.71804 18.808C4.09787 20.6666 5.71942 22 7.59978 22H16.4002C18.2806 22 19.9021 20.6666 20.282 18.808L21.9169 10.808C22.4241 8.32624 20.546 6 18.0351 6Z" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 2L6 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 2L18 6" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 14L9 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 14L15 18" stroke="#FFF9F0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
         
       </div>
 
       <!-- action buttons -->
-      <div class="fixed bottom-5 left-1/2 transform -translate-x-1/2 grid w-full max-w-[520px] grid-cols-3 space-x-6 px-10">          
+      <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 grid w-full max-w-[520px] grid-cols-3 space-x-6 px-10 pb-5 bg-[#fff9f0]">          
         <button onclick=goToMenu() class="return-button col-span-1 bg-[#FFF6E8] shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4)] rounded-[16px] text-[#241E17] text-lg">
           بازگشت
         </button>
@@ -80,7 +92,6 @@
           انتخاب
         </button>
       </div>
-
     </div>
 
     <!-- Modal HTML -->

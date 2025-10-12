@@ -999,7 +999,33 @@
     }
   }
 }
+.hover\:border-\[\#FFA842\] {
+  &:hover {
+    @media (hover: hover) {
+      border-color: #FFA842;
+    }
+  }
+}
+
+.hover\:bg-\[\#FC9419\] {
+  &:hover {
+    @media (hover: hover) {
+      background-color: #FC9419;
+    }
+  }
+}
+.hover\:text-white {
+  &:hover {
+    @media (hover: hover) {
+      color: #fff;
+    }
+  }
+}
+
 .tracking-wide {
   --tw-tracking: var(--tracking-wide);
   letter-spacing: var(--tracking-wide);
+}
+.bg-\[\#FC9419\] {
+  background-color: #FC9419;
 }

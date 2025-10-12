@@ -102,8 +102,7 @@ function exitSearch(){
     if (categories && categories.length > 0) {
         currentCategoryIndex = 0;
         loadedCategories.clear();
-        loadCategoryItems(categories[0].id, cart);
-        setupInfiniteScroll(cart);
+        fillItems(cart);
     }
 }
 

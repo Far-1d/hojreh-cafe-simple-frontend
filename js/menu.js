@@ -38,12 +38,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             await fetchAndStoreData('GET', `${base_url}/api/menu/category/list/${menu_id}`, 'category', {}, null, 60*5); // expiry = 5 min
         }
 
+        ///////////////      option 1 : all items load at once but takes time
+        if (! getWithExpiry('items')){
+            // get items for each category , concatenate them, store 'em
+            await fetchAndStoreData('GET', `${base_url}/api/menu/get/${menu_id}`, 'items', {}, null, 60*1); // expiry = 1 min
+        }
+
+        fillCategory();
+
         if (isSearching != "true"){
-            // Load categories sequentially like puzzle pieces
-            await loadCategoriesSequentially(cart);
+            fillItems(cart);
         } else {
             categoryContainer.style.display = 'none';
         }
+
+        //////////////      option 2 : load items squentially 
+        // if (isSearching != "true"){
+        //     // Load categories sequentially like puzzle pieces
+        //     await loadCategoriesSequentially(cart);
+        // } else {
+        //     categoryContainer.style.display = 'none';
+        // }
 
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -388,14 +403,24 @@ function fillItems(cart, isFromSearch=false){
     
 }
 
+function fillCategory(){
+    const category_div = document.getElementsByClassName('category_list')[0];
+    category_div.innerHTML = '';
+    const categories = getWithExpiry('category');
+    categories.forEach((category, idx) => {
+        const div = createCategoryElement(category, idx);
+        category_div.appendChild(div);
+    });
+}
+
 // create a categoty element for item list
 function createCategoryHeader(name, idx){
     const div = document.createElement('div');
-    div.className = "mt-10 mb-6 flex w-full items-center justify-center item-section border-2 border-[#665541] border-dashed rounded-xl py-4 hover:bg-[#6655411b] duration-150";
+    div.className = "mt-10 mb-6 flex w-full items-center justify-center item-section border-dashed rounded-xl py-4 bg-[#FFA842] hover:bg-[#FC9419] duration-150 text-white";
     div.id = `section-${idx}`
 
     const span = document.createElement('span');
-    span.className = "text-xl font-bold text-[#665541]";
+    span.className = "text-xl font-bold ";
     span.textContent = name;
 
     div.appendChild(span)

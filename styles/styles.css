@@ -482,6 +482,9 @@ video {
   position: -webkit-sticky;
   position: sticky;
 }
+.bottom-0 {
+  bottom: 0rem;
+}
 .bottom-10 {
   bottom: 2.5rem;
 }
