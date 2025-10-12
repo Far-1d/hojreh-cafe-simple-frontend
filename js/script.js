@@ -54,11 +54,11 @@ async function fetchAndStoreData(method, url, key, headers, json_data, expiry=60
 }
 
 
-const base_url = "http://127.0.0.1:8000"
-// const base_url = 'https://hojrehadmin.ir'
+// const base_url = "http://127.0.0.1:8000"
+const base_url = 'https://hojrehadmin.ir'
 
-const front_url = "http://127.0.0.1:8080"
-// const front_url = "https://hojrehcafe.ir"
+// const front_url = "http://127.0.0.1:8080"
+const front_url = "https://hojrehcafe.ir"
 
 
 function convertToPersianPrice(number) {
